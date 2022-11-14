@@ -1,0 +1,129 @@
+/* home nav */
+.homelogo h2{
+    font-weight: bolder;    
+}
+.shop-bag{
+    color: rgb(60, 8, 109);
+    font-size: 40px;
+}
+.search-bg{
+    background-color: rgb(60, 8, 109);
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+.searcher{
+    width: 100%;
+}
+.nav-wrap{
+    padding: 0;
+}
+.form input{
+    width: 75%;
+}
+
+/* home body */
+.banner{
+    background-image: linear-gradient( #6F00C7, #080018);
+    margin: 0;
+    border-radius: 20px 20px 130px 20px;
+    color: aliceblue;
+}
+
+.banimage{
+    width: 250px;
+    height: 300px;
+    border-radius: 10px 10px 20px 10px ;
+    transform: rotate(10deg);
+    margin-top: 20px;
+}
+.banner-text{
+    width: 50%;
+}
+.banner button{
+    background-color: #d30fec;
+    padding: 5px 60px 5px 60px;
+    border: 1px solid #b000c7;
+    border-radius: 10px;
+    color: white;
+}
+.easypay{
+    width: 200px;
+    height: 150px;
+    border-radius: 10px;
+}
+
+/* products */
+.sub-title{
+    background-image: linear-gradient( #6F00C7, #140335);
+    color: white;
+    border-radius: 2px;
+}
+.sell-on{
+    background-image: linear-gradient( #6F00C7, #140335);
+    color: white;
+    border-radius: 2px;
+    animation: seller  infinite;
+    animation-duration: 5s;
+}
+#sell{ animation-timing-function: ease-in-out;}
+@keyframes seller {
+    0% {background-image: linear-gradient( #6F00C7, #140335);}
+    25% {background-image: linear-gradient( #8816bd, #0e86b6);}
+    50% {background-image: linear-gradient( #b66cc9, #0eb6a8);}
+    75% {background-image: linear-gradient( #442a68, #86853e);}
+    100% {background-image: linear-gradient( #392849, #8b4b20);}
+}
+.sell-on h1{
+    font-size: 5em;
+    font-weight: 700;
+    text-shadow: 9px 4px #080018;
+}
+.myalbum{
+    background-color: beige;
+}
+.card-title{
+    /* max-height: 50px; */
+}
+.card-body{
+    height: 200px;
+}
+.carder:hover{
+    transform:scale(1.05);
+    transition: 1s;
+}
+.caro{
+    height: 500px;
+}
+.caro-img{
+    height: 500px;
+    opacity: 0.5;
+}
+
+.loader {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    animation: spin 2s linear infinite;
+    position: fixed;
+    top: 45%;
+    left: 45%;
+    z-index: 111;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  .load{
+    background-color:  rgb(60, 8, 109, 0.9);
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    position: absolute;
+    top: 0;
+    left : 0;
+    bottom: 0;
+    z-index: 1111;
+  }

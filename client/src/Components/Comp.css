@@ -1,0 +1,9 @@
+.footer{
+    background-image: linear-gradient( #6F00C7, #080018);
+    margin-top: 20px;
+}
+.facebook, .google{
+    color: white;
+    font-size: 40px;
+}
+
