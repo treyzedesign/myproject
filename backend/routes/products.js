@@ -1,31 +1,32 @@
 const {Router} = require("express")
 // const product = require("../controllers/product")
 const Products = require("../model/Products")
+const Verify = require("../utils/Auth")
 const productRouter = Router()
-const multer = require("multer")
+// const multer = require("multer")
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb)=>{
-       cb(null, './upload/')
-    },
-    filename: (req, file, cb)=>{
-       cb(null, "fleeksOnlineStore" + "_" + file.originalname)
-    }
-})
-const fileFilter = (req, file, cb)=>{
-    if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
-        cb(null, true)
-    }else{
-        cb(null, true)
-    }
-}
-const upload = multer({
-    storage: storage,
-    limits:{
-        fileSize: 1024 * 1024 * 7 //7mb
-    },
-    fileFilter: fileFilter
-})
+// const storage = multer.diskStorage({
+//     destination: (req, file, cb)=>{
+//        cb(null, './upload/')
+//     },
+//     filename: (req, file, cb)=>{
+//        cb(null, "fleeksOnlineStore" + "_" + file.originalname)
+//     }
+// })
+// const fileFilter = (req, file, cb)=>{
+//     if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
+//         cb(null, true)
+//     }else{
+//         cb(null, true)
+//     }
+// }
+// const upload = multer({
+//     storage: storage,
+//     limits:{
+//         fileSize: 1024 * 1024 * 7 //7mb
+//     },
+//     fileFilter: fileFilter
+// })
 // upload.single('./upload')
 // req.file.path
 // for adding products
@@ -114,7 +115,7 @@ productRouter.get("/products/total", async(req,res)=>{
 })
 
 // get product categories
-productRouter.get("/products/categories", async (req, res)=>{
+productRouter.get("/products/categories", Verify, async (req, res)=>{
     try {
         const feedback = await Products.distinct("category")
         if(feedback){
@@ -175,15 +176,14 @@ productRouter.get("/products/season/:season", async(req, res)=>{
 })
 
 //get products by ID
-productRouter.get("/products/:id", async (req, res)=>{
+productRouter.get("/products/:id", Verify, async (req, res)=>{
     const id = req.params.id;
 	// const limit = Number(req.query.limit) || 0;
 	// const sort = req.query.sort == 'desc' ? -1 : 1;
 
     try {
         const feedback = await Products.find({id})
-        .limit(limit)
-		.sort({ id: sort })
+
         if(feedback){
             res.send(feedback)
         }else{
@@ -234,7 +234,7 @@ productRouter.patch("/products/:id", async(req, res)=>{
 })
 
 //for deleting product
-productRouter.delete("/products/:id", async(req,res)=>{
+productRouter.delete("/products/:id", Verify, async(req,res)=>{
     const delete_id = req.params.id
     if(delete_id == null){
         res.status(400).json({

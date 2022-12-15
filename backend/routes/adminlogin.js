@@ -1,6 +1,8 @@
 const {Router} = require("express")
 const bcryptjs = require("bcryptjs")
 const Admin = require("../model/Admin")
+const AdminToken = require("../model/AdminToken")
+const jwt = require('jsonwebtoken')
 const loginRouter = require("./loginRouter")
 
 const adminLogin = Router()
@@ -19,14 +21,22 @@ adminLogin.post("/admin-login", async(req, res)=>{
             if(passwordChecker){
                 console.log("password matched");
                 const checker = {
+                    id : admin_feedback.id,
                     email : email,
-                    password : passwordChecker
+                    password : passwordChecker,
+                    AccessToken : jwt.sign({
+                        id: admin_feedback.id,
+                        email: email}, process.env.TOKEN_SECRET_KEY, {expiresIn: "24h"})
                 } 
                 req.session.admin_user = checker
-
+                await AdminToken.create({
+                    id : admin_feedback.id,
+                    email : email,
+                    AccessToken : checker.AccessToken
+                })
                 res.status(200).json({
                     message: "admin logged in successfully",
-                    data:req.session.admin_user ,
+                    AccessToken : checker.AccessToken,
                     code: "login successful"          
                 })
 

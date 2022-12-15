@@ -51,7 +51,7 @@ const HomeBan = ({handleClick}) => {
                                 <h6 class="font-weight-semibold ">{item.title}</h6>
                             </div>
                             <span class="text-muted mr-5" data-abc="true">{item.category}</span>
-                            <span class=" font-weight-bold">&#8358;{item.price}</span>
+                            <span class=" font-weight-bold">{item.price}</span>
                             <div class="text-muted mb-3">{item.brand}</div>
                             <button type="button" class="btn btn-outline-primary bg-cart" onClick={()=>handleClick(item)}> Add to cart</button>
                         </div>

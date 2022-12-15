@@ -1,9 +1,74 @@
 .footer{
     background-image: linear-gradient( #6F00C7, #080018);
     margin-top: 20px;
+    position: relative;
+    bottom: 0;
+    left: 0;
+    right: 0;  
 }
 .facebook, .google{
     color: white;
     font-size: 40px;
 }
+.cart{
+    min-height: 80vh;
+}
+.Cart-image{
+    width: 12vw;
+    height: auto;
+}
+.loader {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    animation: spin 2s linear infinite;
+    position: fixed;
+    top: 45%;
+    left: 45%;
+    z-index: 111;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  .load{
+    background-color:  rgb(60, 8, 109, 0.9);
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    position: absolute;
+    top: 0;
+    left : 0;
+    bottom: 0;
+    z-index: 1111;
+  }
+ .map{
+     height: 70vh;
+     width: 100%;
+ }
+ .info{
+  background-color: rgb(62, 6, 73);
+  color: white;
+ }
+ /* email verify */
+.email-body{
+    width: 100%;
+    height: 100vh;
+}
+.email-card{
+    width: 30%;
+    margin: 8em auto;
+    text-align: center;
+    background-color: grey;
+    padding: 15px;
+    border-radius: 7px;
+}
+.fail{
+    font-size: 80px;
+    transform: rotate(45deg);
+}
+
 

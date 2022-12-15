@@ -32,7 +32,7 @@
     bottom: 0;
     right: 0;
     top: 0;
-    /* min-height: 100vh; */
+    min-height: 100vh;
 }
 .bar-item{
     font-size: larger;
@@ -110,4 +110,7 @@ label{
 marquee{
     background-color: rgba(25, 4, 46, 0.9);
     color: white;
+}
+.table-cont{
+    width: 70%;
 }

@@ -22,10 +22,10 @@ const AdminForm = () => {
         password
       }).then((feedback)=>{
         if(feedback){
-        console.log(feedback)
-        navigate("/admin")
+        console.log(feedback.data.AccessToken)
+        navigate(`/admin`)
         setLoader(false)
-        sessionStorage.setItem('user', JSON.stringify(feedback.data.message))
+        sessionStorage.setItem('user', JSON.stringify(feedback.data.AccessToken))
         }
       }).catch((result)=>{
         console.log(result)

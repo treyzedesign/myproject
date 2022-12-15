@@ -20,7 +20,7 @@ const mongodbSessionStore = new mongodbSession({
     databaseName: "E-commerce",
     collection: "sessions"
   })
-app.use("/upload",express.static('upload'))
+// app.use("/upload",express.static('upload'))
 app.use(cors())
   app.use(session({
     secret: "whateverishereisbeautifulandblessedinthenameofJesusAmenMovingon",

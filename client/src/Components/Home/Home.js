@@ -10,7 +10,6 @@ const Home = () => {
     <>
        {/* <HomeNav/> */}
        {/* <HomeBan handleClick={handleClick}/> */}
-
     </>
   )
 }

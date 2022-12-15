@@ -22,7 +22,7 @@ const AdminNav = () => {
                 <div className="links text-right  d-flex justify-content-around mt-3">
                     <span><Link to='' className='text-dark font-weight-bolder dropdown-toggle'data-toggle="dropdown" aria-expanded="false" >account</Link>
                     <div className="dropdown-menu">
-                      <Link  to='/admin-login' onClick={()=> logout()} className="dropdown-item bg-warning" >Login</Link>
+                      <Link  to='/admin-login' onClick={()=> logout()} className="dropdown-item bg-warning" >Log out</Link>
                     </div>
                     </span>
                     <span><Link to=''  className='text-dark font-weight-bolder'>contact</Link></span>
