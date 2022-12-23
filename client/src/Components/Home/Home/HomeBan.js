@@ -6,47 +6,22 @@ import market from "./images/market.jpg"
 import caro1 from "./images/caro1.jpg"
 import caro2 from "./images/caro2.jpg"
 import caro3 from "./images/caro3.jpg"
-import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
-import "./Home.css"
-const HomeBan = ({handleClick}) => {
- const [loader, setLoader] = useState(false)
- const [topDeals, setTopDeals] = useState([])
- const [editor, setEditor] = useState([])
- const td_url = `http://localhost:3001/api/v1/products/season/top-deals?limit=4`
- const ed_url = `http://localhost:3001/api/v1/products/season/editor?limit=4`
 
+import "./Home.css"
+const HomeBan = ({handleClick, topDeals, editor, loader}) => {
  
-  const fetchProducts = async (td_url, ed_url)=>{
-    setLoader(true)
-    const topdeals = await axios.get(td_url).then((feedback)=>{
-       console.log(feedback.data)
-       setTopDeals(feedback.data)
-       setLoader(false)
-    }).catch((issue)=>{
-        console.log(issue);
-    })
-    const editor = await axios.get(ed_url).then((feedback)=>{
-        console.log(feedback.data)
-        setEditor(feedback.data)
-     }).catch((issue)=>{
-         console.log(issue);
-     })
-  }
-  useEffect(() => {
-     fetchProducts(td_url, ed_url)
-  }, []);
  console.log(topDeals)
   const deals = topDeals.map((item, index)=>{
-    return <div class="col-md-3 mt-2 mb-5" key={index}>
+    return <div class="col-sm-3 mt-2 mb-5" key={index}>
                  <div class="card carder">
                         <div class="card-body">
                             <div class="card-img-actions img-box">
-                                <img src={item.poster} class="card-img" width="96" height="250" alt="product image"/>
+                                <img src={item.poster} class="card-img" 
+                                 alt="product image"/>
                             </div>
                         </div>
-                        <div class="card-body  bg-light " height="200">
+                        <div class="card-body  bg-light " height="100">
                             <div class="card-title">
                                 <h6 class="font-weight-semibold ">{item.title}</h6>
                             </div>
@@ -131,10 +106,12 @@ const HomeBan = ({handleClick}) => {
     </div>
     </div>
         <h3 className='sub-title p-2'>Top deals</h3>
-        <div class="container-fluid d-flex justify-content-center mt-50 mb-50 ">     
-            <div class="row">
-               {deals}
-            </div>
+        <div class="container-fluid d-flex  mt-50 mb-50 ">    
+           <div className='col-sm-12'>
+                <div class="row">
+                {deals}
+                </div>
+            </div> 
         </div>
         <h3 className='sub-title p-2'>Editor's choice</h3>
         <div class="container-fluid d-flex justify-content-center mt-50 mb-50 ">     

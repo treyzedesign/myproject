@@ -12,6 +12,7 @@
 }
 .cart{
     min-height: 80vh;
+    background-color: rgb(235, 227, 227);
 }
 .Cart-image{
     width: 12vw;
@@ -71,4 +72,16 @@
     transform: rotate(45deg);
 }
 
-
+.sub-total{
+    background-color: rgb(255, 255, 255);
+    position: sticky;
+    right: 0;
+    top: 0vh;
+    bottom: 80vh;
+    height: 35vh;
+    z-index: 1;
+    border-radius: 10px;
+}
+.shopping-cart{
+    background-color: rgb(255, 255, 255);
+}

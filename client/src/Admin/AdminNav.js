@@ -2,11 +2,12 @@ import React from 'react'
 import { FaShoppingBag } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 // import "../Components/Home/Home.css"
+import Cookie from "js-cookie"
 import "./admin.css"
 
 const AdminNav = () => {
   const logout = ()=>{
-    sessionStorage.removeItem('user')
+    Cookie.remove('AccessToken')
   }
   return (
     <>

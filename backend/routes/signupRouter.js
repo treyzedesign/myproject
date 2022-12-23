@@ -92,8 +92,8 @@ signupRouter.post("/verifyEmail", async(req, res)=>{
     console.log(req.body)
     const userEmail = await User.findOne({mail})
     const usertoken = await Token.findOne({emailtoken}) 
-    const real_token = usertoken.token;
-    console.log(real_token);
+    // const real_token = usertoken.token;
+    // console.log(real_token);
         try {
             if(userEmail){
                 const decode = jwt.verify(usertoken.token, 'jesuswillforeverbethemosthighnomatterwhat', async(err, decode)=>{

@@ -6,20 +6,18 @@ dotenv.config()
 const Verify = async(req, res, next)=>{
     const authHeader = req.headers.token
     console.log(authHeader);
-    // const token = authHeader.split(" ")[1]
-    // console.log(token);
-    const admintoken = await AdminToken.findOne({authHeader})
+    const admintoken = await AdminToken.find({authHeader})
     if(admintoken){
-        console.log(admintoken);
-       await jwt.verify(authHeader, process.env.TOKEN_SECRET_KEY, (err, decode)=>{
+        // console.log(admintoken);
+        jwt.verify(authHeader, 'ivealwaystriedmybesttomakemymamaandfamilyproudofmebytryingeverythingpossibletomakeitinlifeinGodiwilltrust'
+        , (err, decode)=>{
             if(err){
                 res.status(403).json({
                     msg: err
                 })
+                
             }
-            if(decode){
-                res.status(201).json({msg: decode})
-            }
+            
             // req.admin_feedback = decode;
             next()
         })
@@ -28,6 +26,7 @@ const Verify = async(req, res, next)=>{
             msg: "not authenticated"
         })
     }
+    // }
 }
 
 module.exports = Verify;

@@ -2,18 +2,19 @@ import React from 'react'
 import "../admin.css"
 import axios from 'axios'
 import { useRef, useState, useEffect } from 'react'
+import Cookies from 'js-cookie'
 
 const Adminprod = ({del_prod}) => {
-  const [file, setFile] = useState()
+  const [title, setTitle] = useState()
+  const [desc, setDesc] = useState()
+  const [spec, setSpec] = useState()
+  const [brand, setBrand] = useState()
+  const [price, setPrice] = useState()
+  const [category, setCat] = useState()
+  const [season, setSeason] = useState()
+  const [poster, setPoster] = useState()
   const [prod, setProd] = useState([]);
-  const titleRef = useRef(null);
-  const descRef = useRef(null);
-  const specRef = useRef(null)
-  const brandRef = useRef(null)
-  const priceRef  = useRef(null)
-  const catRef = useRef(null)
-  const seasonRef = useRef(null)
-  const imageRef = useRef(null)
+ 
   
   const product_url = `http://localhost:3001/api/v1/products`
   const fetchProducts = async (product_url)=>{
@@ -61,26 +62,24 @@ const Adminprod = ({del_prod}) => {
      </div>
   })
   
-  const postprod = async()=>{
-  const title = titleRef.current.value
-  const description = descRef.current.value
-  const spec = specRef.current.value
-  const brand = brandRef.current.value
-  const price = priceRef.current.value
-  const category = catRef.current.value
-  const season = seasonRef.current.value
-     const poster = imageRef.current.value
-  //  const poster = new FormData()   ;
-  //  poster.append("file", file)  
-      await axios.post(`http://localhost:3001/api/v1/products`, {
-        title,
-        description,
-        spec,
-        brand,
-        price,
-        category,
-        season,
-        poster
+  const postprod = (e)=>{
+    e.preventDefault()
+      const token = Cookies.get('AccessToken')
+      const form = new FormData();
+
+      form.append('title', title)
+      form.append('description', desc)
+      form.append('spec', spec)
+      form.append('brand', brand)
+      form.append('price', price)
+      form.append('category', category)
+      form.append('season', season)
+      form.append('image', poster)
+
+      axios.post(`http://localhost:3001/api/v1/products`, form, {
+        headers: {
+          "token" : token
+        }
       }).then((feedback)=>{
         console.log(feedback)
       }).catch((fault)=>{
@@ -91,34 +90,34 @@ const Adminprod = ({del_prod}) => {
   return (
     <div className='product m-auto'>
       <div className='prod-box m-auto'>
-        <form method='post' encType='multipart/form-data'>
+        <form method='post' onSubmit={postprod} encType='multipart/form-data'>
           <h1 className='p-h1'>POST PRODUCTS</h1>
           <div className='form-group'>
             <label>title</label><br/>
-            <input type="text" ref={titleRef} className='form-control' />
+            <input type="text" onChange={(e)=>{setTitle(e.target.value)}} value={title} className='form-control' />
           </div>
           <div className='form-group'>
             <label>description</label><br/>
-            <textarea cols="60" ref={descRef} rows="5"></textarea>
+            <textarea cols="60" onChange={(e)=>{setDesc(e.target.value)}} value={desc} rows="5"></textarea>
           </div>
           <div className='form-group'>
             <label>spec</label><br/>
-            <textarea cols="60" ref={specRef} rows="5"></textarea>
+            <textarea cols="60" onChange={(e)=>{setSpec(e.target.value)}} value={spec} rows="5"></textarea>
           </div>
           <div className='d-flex'>
           <div className='form-group'>
             <label>brand</label><br/>
-            <input type="text" ref={brandRef} className='form-control' />
+            <input type="text" onChange={(e)=>{setBrand(e.target.value)}} value={brand} className='form-control' />
           </div>
           <div className='form-group ml-5'>
             <label>price</label><br/>
-            <input type="text" ref={priceRef} className='form-control' />
+            <input type="text" onChange={(e)=>{setPrice(e.target.value)}} value={price} className='form-control' />
           </div>
           </div>
           <div >
           <div className='form-group'>
             <label>category</label><br/>
-            <select ref={catRef} className='browser-default custom-select px-2'>
+            <select onChange={(e)=>{setCat(e.target.value)}} value={category} className='browser-default custom-select px-2'>
               <option disabled selected></option>
               <option > phones&tablet</option>
               <option > computer</option>
@@ -129,7 +128,7 @@ const Adminprod = ({del_prod}) => {
           </div>
           <div className='form-group'>
             <label>season</label><br/>
-            <select ref={seasonRef} className='browser-default custom-select '>
+            <select onChange={(e)=>{setSeason(e.target.value)}} value={season} className='browser-default custom-select '>
               <option disabled selected></option>
               <option > Topdeals</option>
               <option > Bonanza</option>
@@ -137,19 +136,19 @@ const Adminprod = ({del_prod}) => {
             </select>
           </div>
           </div> 
-          {/* <div className='form-group'>
+          <div className='form-group'>
             <label>image file</label><br/>
-            <input type="file" ref={imageRef} onChange={event => {
-              const file = event.target.files[0]
-              setFile(file) 
+            <input type="file"  onChange={(e) => {
+              const file = e.target.files[0]
+              setPoster(file) 
             }} className='form-control' />
-          </div> */}
-           <div className='form-group ml-5'>
+          </div>
+           {/* <div className='form-group ml-5'>
             <label>image</label><br/>
             <input type="text" ref={imageRef} className='form-control' />
-          </div>
+          </div> */}
           <div>
-            <button onClick={postprod}> post product</button>
+            <button type='submit'  className="btn btn-warning"> post product</button>
           </div>
         </form>
       </div>

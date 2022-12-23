@@ -3,6 +3,7 @@ const bcryptjs = require("bcryptjs")
 const User = require("../model/signup")
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv')
+const UserToken = require("../model/UserToken")
 dotenv.config()
 const loginRouter = Router()
 
@@ -33,7 +34,23 @@ loginRouter.post("/login", async(req, res)=>{
                 }
                 const userVerified = feedback.verified
                 if(userVerified){
-                    req.session.login_user = logged
+                    req.session.login_user = logged;
+                    let tokenChecker = await UserToken.find({id: feedback.id});
+                    if(tokenChecker){
+                        await UserToken.updateMany({id: feedback.id},
+                            {
+                                $set:{
+                                    AccessToken: logged.Accesstoken
+                                }
+                            })
+                    }else{
+                        await UserToken.create({
+                            id: feedback.id,
+                            email: email,
+                            name: feedback.firstName,
+                            AccessToken : logged.Accesstoken
+                        })
+                    }
                     res.status(201).json({
                         message: "User logged in successfully",
                         data: {
@@ -43,6 +60,13 @@ loginRouter.post("/login", async(req, res)=>{
                         },
                         code: "login-success"
                     })
+                    res.cookie( "userAccessToken", cookieToken,
+                    {
+                      maxAge: 1000 * 60 * 60 * 6,
+                      secure: false,
+                      sameSite: true
+                    }
+                  )
                     console.log('success');
                 }else{
                     res.status(401).json({

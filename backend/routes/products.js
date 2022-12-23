@@ -2,48 +2,38 @@ const {Router} = require("express")
 // const product = require("../controllers/product")
 const Products = require("../model/Products")
 const Verify = require("../utils/Auth")
+// const Verify = require("../utils/Auth")
 const productRouter = Router()
-// const multer = require("multer")
+const multer = require('multer')
+const { verify } = require("jsonwebtoken")
 
-// const storage = multer.diskStorage({
-//     destination: (req, file, cb)=>{
-//        cb(null, './upload/')
-//     },
-//     filename: (req, file, cb)=>{
-//        cb(null, "fleeksOnlineStore" + "_" + file.originalname)
-//     }
-// })
-// const fileFilter = (req, file, cb)=>{
-//     if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
-//         cb(null, true)
-//     }else{
-//         cb(null, true)
-//     }
-// }
-// const upload = multer({
-//     storage: storage,
-//     limits:{
-//         fileSize: 1024 * 1024 * 7 //7mb
-//     },
-//     fileFilter: fileFilter
-// })
-// upload.single('./upload')
-// req.file.path
-// for adding products
-productRouter.post("/products", async(req,res)=>{
-    // console.log(req.file)
-    const{
-        id,
-        title, 
-        description, 
-        spec,
-        brand,
-        price,
-        category,
-        season,
-        poster,
-        likes
-    } = req.body
+const storage = multer.diskStorage({
+    destination: (req, file, cb)=>{
+       cb(null, './upload/')
+    },
+    filename: (req, file, cb)=>{
+       cb(null, "fleeksOnlineStore" + "_" + file.originalname)
+    }
+})
+
+const upload = multer({
+    storage: storage,
+    limits:{
+        fileSize: 1024 * 1024 * 7 //7mb
+    }
+})
+
+productRouter.post("/products",  Verify, upload.single('image'), async(req,res)=>{
+    console.log(req.file)
+   
+    const title = req.body.title
+    const description = req.body.description
+    const spec = req.body.spec
+    const brand = req.body.brand
+    const price = req.body.price
+    const category = req.body.category
+    const season = req.body.season
+    const poster = req.file.path
     try{
         if(req.body == undefined){
             res.status(404).json({
@@ -66,7 +56,7 @@ productRouter.post("/products", async(req,res)=>{
                 poster: poster,
                 date: date
             })
-            console.log(newProduct)
+            // console.log(newProduct)
             if(newProduct){
                 const produce = await Products.create(newProduct)
                 res.status(201).json({msg: "products added successfully", data: produce})
@@ -89,7 +79,7 @@ productRouter.get("/products/", async (req, res)=>{
         .limit(limit)
         .sort({id : sort, date: date})
         if(feedback){
-            console.log(feedback)
+            // console.log(feedback)
             res.send(feedback)
         }
        
@@ -115,7 +105,7 @@ productRouter.get("/products/total", async(req,res)=>{
 })
 
 // get product categories
-productRouter.get("/products/categories", Verify, async (req, res)=>{
+productRouter.get("/products/categories",  async (req, res)=>{
     try {
         const feedback = await Products.distinct("category")
         if(feedback){
@@ -176,7 +166,7 @@ productRouter.get("/products/season/:season", async(req, res)=>{
 })
 
 //get products by ID
-productRouter.get("/products/:id", Verify, async (req, res)=>{
+productRouter.get("/products/:id", async (req, res)=>{
     const id = req.params.id;
 	// const limit = Number(req.query.limit) || 0;
 	// const sort = req.query.sort == 'desc' ? -1 : 1;
@@ -244,12 +234,9 @@ productRouter.delete("/products/:id", Verify, async(req,res)=>{
     }else{
         const del_prod= await Products.findOne({
 			id: req.params.id
-		})
-        res.send({del_prod})
-        if(del_prod){
-            const deleted = await Products.deleteOne(del_prod)
-        }
-
+		}).deleteOne()
+        // res.send({del_prod})
+       
     }
 })
 

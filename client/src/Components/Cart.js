@@ -2,36 +2,12 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import { FaTrash, FaPlus, FaMinus } from 'react-icons/fa';
 import "./Comp.css"
-const Cart = () => {
-  const [Cart, setCart] = useState([]);
-  const [price, setprice] = useState();
-  const fetchCart = ()=>{
-    const cartItem = JSON.parse(localStorage.getItem("cart"))
-    if(cartItem){
-     setCart(cartItem)
-     console.log(Cart);
-    }
-  }
-  const handleChange = (item, d) => {
-    const ind = Cart.indexOf(item);
-    const arr = Cart;
-    arr[ind].amount += d;
+const Cart = ({cart, handleChange, handlePrice, price, deleteCartItem}) => {
+  
 
-    if (arr[ind].amount === 0) arr[ind].amount = 1;
-    setCart([...arr]);
-    handlePrice()
-  };
-  let ans = 0
-  const handlePrice = () => {
-    Cart.map((item) => {ans += item.amount * item.price});
-    setprice(ans);
-  };
   // handlePrice()
-  useEffect(()=>{
-    fetchCart();
-    handlePrice();
- },[])
-  const placeCart = Cart.map((item, index)=>{
+  
+  const placeCart = cart.map((item, index)=>{
     return <tbody >
     <tr key={index}>
         <td>
@@ -50,50 +26,52 @@ const Cart = () => {
             </div>
         </td>
         <td class="text-center text-lg text-medium">{item.price}</td>
-        <td class="text-center"><FaTrash onClick={()=> deleteItem(item)}/></td>
+        <td class="text-center"><FaTrash onClick={()=> deleteCartItem(item)}/></td>
     </tr>
     </tbody>
   })
 
-  const deleteItem = (item)=>{
-    const cartid = item.id
-    let cartCopy = JSON.parse(localStorage.getItem('cart'))
-  
-    cartCopy = cartCopy.filter(item => item.id != cartid);
-    //update state and local
-    setCart(cartCopy);
-    let cartString = JSON.stringify(cartCopy)
-    localStorage.setItem('cart', cartString)
-    // window.location.reload()
-    handlePrice()
-  }
-
+ 
  
   
   return (
     <div className='cart'>
-        <div class="container-fluid padding-bottom-3x mb-1">    
-          <div class="table-responsive shopping-cart">
-            <table class="table">
-              <thead>
+        <div class="container-fluid padding-bottom-3x mb-1">
+          <div className='col-sm-12'>
+            <div className='row'>
+               <div className='col-sm-9'>
+               <div class="table-responsive shopping-cart">
+                  <table class="table">
+                  <thead className='bg-gray'>
                   <tr>
                       <th>Product Name</th>
                       <th class="text-center">Quantity</th>
                       <th class="text-center">price</th>
                       <th class="text-center"><a class="btn btn-sm btn-outline-danger" href="#">Clear Cart</a></th>
                   </tr>
-              </thead>
+                  </thead>
                    {placeCart}
+                  </table>
+                </div>
+                </div>
+                <div className='col-sm-3 mt-2 shadow-lg sub-total'>
                 <div>
-                   <h3>
-                   <span>SubTotal:</span> &#8358;{price}
-                   </h3>
+                  <div>
+                    <h4>
+                      Cart summary
+                    </h4>
+                    <hr/>
+                  </div>
+                   <h5>
+                   <span>Subtotal:</span> 
+                   <span> &#8358;{price}</span>
+                   </h5>
+                   <hr/>
+                   <button className='btn btn-warning mt-3 w-100'> Checkout (&#8358;{price})</button>
                 </div> 
-
-                    
-                  
-            </table>
-          </div>
+                </div>
+            </div>
+          </div>    
         </div>
     </div>   
   )

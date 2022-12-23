@@ -29,14 +29,32 @@ adminLogin.post("/admin-login", async(req, res)=>{
                         email: email}, process.env.TOKEN_SECRET_KEY, {expiresIn: "24h"})
                 } 
                 req.session.admin_user = checker
-                await AdminToken.create({
-                    id : admin_feedback.id,
-                    email : email,
-                    AccessToken : checker.AccessToken
-                })
+                let cookieToken = checker.AccessToken
+                let tokenChecker = await AdminToken.findOne({id: admin_feedback.id})
+                if(tokenChecker){
+                    await AdminToken.updateMany({id: admin_feedback.id},
+                        {
+                            $set:{
+                                AccessToken : checker.AccessToken
+                            }
+                        })
+                }else{
+                    await AdminToken.create({
+                        id : admin_feedback.id,
+                        email : email,
+                        AccessToken : checker.AccessToken
+                    })
+                }
+                
+                res.cookie( "AccessToken", cookieToken,
+                {
+                  maxAge: 1000 * 60 * 60 * 6,
+                  secure: false,
+                  sameSite: true
+                }
+              )
                 res.status(200).json({
                     message: "admin logged in successfully",
-                    AccessToken : checker.AccessToken,
                     code: "login successful"          
                 })
 
@@ -50,7 +68,7 @@ adminLogin.post("/admin-login", async(req, res)=>{
             res.status(404).json({msg: "invalid credentials"})
         }
     }catch(error) {
-        res.status(500).json({msg:error.message})
+        res.status(500).json({msg: error})
     }
 })
 
