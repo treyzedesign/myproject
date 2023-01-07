@@ -11,6 +11,8 @@ const AdminSide = () => {
             <li className="bar"><Link className="bar-item" to="/admin/users">Users</Link></li>
             <li className="bar"><Link className="bar-item" to="/admin/orders">orders</Link></li>
             <li className="bar"><Link className="bar-item" to="/admin/notifications">Inbox</Link></li>
+            <li className="bar"><Link className="bar-item" to="/">Go to site</Link></li>
+
             
         </ul>
     </div>

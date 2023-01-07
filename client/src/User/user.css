@@ -5,7 +5,48 @@
 .nav{
     background-color: #f3f3f3;
     margin-top: 0;
+    position: relative;
+    
 }
 .container{
     margin: 0;
+}
+
+.layout{
+    background-color: white;
+    border-radius: 10px;
+    margin-top: 2vh;
+    border: 2px solid black;
+    
+}
+
+/* sidebar */
+.side{
+    height: 60vh;
+    width: 230px;
+    margin: 2vh 2vw 0vh 1vw;
+    border-radius: 10px;
+    background-color: white;
+    position: sticky;
+    top: 15vh;
+}
+.splitlayout{
+    background-color: rgb(241, 240, 240);
+}
+.side-link{
+    color: black;
+}
+.side-link div{
+    padding: 20px;
+}
+.side-link div:hover {
+    background-color: #3498db;
+    color: white;
+}
+/* userdash  */
+.user-icon{
+    font-size: 140px;
+}
+.verify-check{
+    color: rgb(4, 112, 4);
 }

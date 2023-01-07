@@ -1,24 +1,50 @@
 import React from 'react'
-import { NavLink, Link } from 'react-router-dom'
-import { FaShoppingBag, FaCartPlus } from 'react-icons/fa'
+import { useNavigate, Link } from 'react-router-dom'
+import Cookies from 'js-cookie'
+import jwt_Decode from 'jwt-decode'
+import { FaShoppingBag, FaCartPlus, FaUser } from 'react-icons/fa'
+import { useState, useEffect } from 'react'
 import './Home.css'
 const HomeNav = ({size, name}) => {
+  const [isUser, setIsUser] =useState(false)
+  const [user_name, setUser_name] = useState()
+  const navigate = useNavigate()
+  useEffect(()=>{
+    const usertoken = Cookies.get("UserLoginToken")
+    if (usertoken) {
+      const decoder = jwt_Decode(usertoken)
+      setUser_name(decoder.Name)
+      setIsUser(true)
+    }
+  },[])
   return (
     <div class="container-fluid nav-wrap">
       <div class="col-sm-12 mt-2">
         <div class="row">
-            <div class="col-sm-5">
+            <div class="col-sm-3">
                 <div class="logo">
-                    <Link to="/" className='text-decoration-none shop-bag'><h1><FaShoppingBag className='shop-bag mr-2 mb-2'/>Fleeks</h1></Link>
+                    <Link to="/" className='text-decoration-none shop-bag'><h1><FaShoppingBag className='home-icon mr-2 mb-2'/>Fleeks</h1></Link>
                 </div>
             </div>
-            <div class="col-sm-7">
+            <div class="col-sm-9">
                 <div class="links text-right  d-flex justify-content-around mt-3">
                     <span><Link to='/about' className='text-dark font-weight-bolder'>about</Link></span>
-                    <span><Link to='' className='text-dark font-weight-bolder dropdown-toggle'data-toggle="dropdown" aria-expanded="false" >account</Link>
+                    <span><Link to='' className='text-dark d-flex font-weight-bolder dropdown-toggle 'data-toggle="dropdown" aria-expanded="true" >{isUser ?
+                        <div><FaUser className='mr-1'/>{user_name}</div>
+                       :
+                       <h6>Account</h6>
+                    }</Link>
                     <div class="dropdown-menu">
-                      <Link  to='/register' class="dropdown-item bg-warning" >Login</Link>
-                      <Link  to=''  class="dropdown-item" >profile</Link>
+                      <div to='' class="dropdown-item bg-warning" >{isUser ? 
+                      <div onClick={()=>{
+                        Cookies.remove("UserLoginToken") 
+                        navigate('/')
+                        }}>Sign Out</div> : 
+                      <div onClick={()=>{
+                         navigate('/login')
+                         
+                         }}>Sign In</div>}</div>
+                      <Link  to='/user/profile'  class="dropdown-item" >profile</Link>
                       <Link  to=''  class="dropdown-item">orders</Link>
                     </div>
                     </span>

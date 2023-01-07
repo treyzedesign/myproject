@@ -11,7 +11,7 @@ const AdminNav = () => {
   }
   return (
     <>
-    <div className= ' container-fluid nav text-center'>
+    <div className= ' container-fluid navigate text-center'>
     <div className="col-sm-12 mt-2">
         <div className="row">
             <div className="col-sm-5">

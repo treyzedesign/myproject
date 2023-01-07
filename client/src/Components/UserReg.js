@@ -12,6 +12,7 @@ const UserReg = () => {
   const firstref = useRef(null)
   const lastref = useRef(null)
   const emailref = useRef(null)
+  const telRef = useRef(null)
   const addressref = useRef(null)
   const stateref = useRef(null)
   const countryref = useRef(null)
@@ -21,18 +22,20 @@ const UserReg = () => {
      const firstName = firstref.current.value
      const lastName = lastref.current.value
      const email = emailref.current.value
+     const tel = telRef.current.value
      const address = addressref.current.value
      const state = stateref.current.value
      const country = countryref.current.value
      const password = passwordref.current.value
      if(firstName.length > 0 && lastName.length > 0 && email.length > 0 && address.length > 0 && state.length > 0 
-        && country.length > 0 && password.length > 0){
+        && country.length > 0 && password.length > 0 &&  tel.length > 0 ){
            setLoader(true)
 
             await axios.post(`http://localhost:3001/api/v1/signup`, {
                 firstName,
                 lastName,
                 email,
+                tel,
                 address,
                 state,
                 country,
@@ -69,8 +72,10 @@ const UserReg = () => {
                 <input type="text"  className="form-control" ref={lastref} placeholder="Last name" required/>
                 <label className="sr-only">email</label>
                 <input type="email"  className="form-control" ref={emailref} placeholder="Email address" required/>
+                <label className="sr-only">Phone NO.</label>
+                <input type="number"  className="form-control" ref={telRef} placeholder="Phone number" required/>
                 <label className="sr-only">Address</label>
-                <input type="text"  className="form-control" ref={addressref} placeholder="Address" required/>
+                <input type="text"  className="form-control" ref={addressref} placeholder="No., street , city" required/>
                 <select className="browser-default custom-select" ref={stateref}>
                   <option disabled selected>Select State</option>
                   <option value="Abia">Abia</option>
@@ -114,8 +119,6 @@ const UserReg = () => {
                 <select className="browser-default custom-select" ref={countryref}>
                   <option disabled selected>Select Country</option>
                   <option value="Nigeria">Nigeria</option>
-                  <option value="Benin republic">Benin Rep.</option>
-                  <option value="Togo">Togo</option>
                 </select>
                 <label className="sr-only">password</label>
                 <input type="password"  className="form-control" placeholder="set password" ref={passwordref} required/>

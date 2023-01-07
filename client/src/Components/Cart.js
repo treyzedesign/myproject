@@ -1,11 +1,13 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom';
 import { FaTrash, FaPlus, FaMinus } from 'react-icons/fa';
 import "./Comp.css"
-const Cart = ({cart, handleChange, handlePrice, price, deleteCartItem}) => {
+const Cart = ({cart, handleChange, clearCart, price, deleteCartItem}) => {
   
-
+const navigate = useNavigate()
   // handlePrice()
+
   
   const placeCart = cart.map((item, index)=>{
     return <tbody >
@@ -47,7 +49,7 @@ const Cart = ({cart, handleChange, handlePrice, price, deleteCartItem}) => {
                       <th>Product Name</th>
                       <th class="text-center">Quantity</th>
                       <th class="text-center">price</th>
-                      <th class="text-center"><a class="btn btn-sm btn-outline-danger" href="#">Clear Cart</a></th>
+                      <th class="text-center"><a class="btn btn-sm btn-outline-danger" href="#" onClick={()=> clearCart()}>Clear Cart</a></th>
                   </tr>
                   </thead>
                    {placeCart}
@@ -67,7 +69,7 @@ const Cart = ({cart, handleChange, handlePrice, price, deleteCartItem}) => {
                    <span> &#8358;{price}</span>
                    </h5>
                    <hr/>
-                   <button className='btn btn-warning mt-3 w-100'> Checkout (&#8358;{price})</button>
+                   <button className='btn btn-warning mt-3 w-100' onClick={()=>{navigate('/checkout-page/delivery')}}> Checkout (&#8358;{price})</button>
                 </div> 
                 </div>
             </div>

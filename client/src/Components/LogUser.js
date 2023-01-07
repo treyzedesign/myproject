@@ -3,6 +3,7 @@ import axios from 'axios'
 import React from 'react'
 import { useState, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import Cookie from 'js-cookie'
 import "./Comp.css"
 
 const LogUser = (props) => {
@@ -26,13 +27,16 @@ const LogUser = (props) => {
                 email,
                 password
             }).then((feedback)=>{
-                console.log(feedback);
+                console.log(feedback.data.data);
+                Cookie.set("UserLoginToken", feedback.data.data , {expires: 7, secure: false, path: "/", sameSite: true})
                 navigate("/user/profile")
                 setLoader(false)
+                
                 // setdata(feedback.data.data.Name)
-                props.onClick(feedback.data.data.Name)
+                // props.onClick(feedback.data.data.Name)
               
-
+                window.location.reload("/user/profile")
+            
             }).catch((fail)=>{
                 console.log(fail)
                 setLoader(false)
@@ -43,13 +47,13 @@ const LogUser = (props) => {
         }
     }
   return (
-    <div className='mt-5'>
+    <div className='mt-5 w-100'>
         {loader && 
      <div className='load'>
         <div className='loader'></div>
      </div>
      }
-    <div className='container m-0 m-auto w-25 text-center mt-5'>
+    <div className='container m-0 m-auto w-sm-25 text-center mt-5'>
               <form className="form-signin">
                 <h1 className="h3 mb-3 font-weight-normal">Please sign in</h1>
                 {inputerr && <h4>input credentials</h4>}

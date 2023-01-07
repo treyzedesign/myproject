@@ -9,13 +9,13 @@ import caro3 from "./images/caro3.jpg"
 import { Link } from 'react-router-dom';
 
 import "./Home.css"
-const HomeBan = ({handleClick, topDeals, editor, loader}) => {
- 
+const HomeBan = ({handleClick, topDeals, editor, loader, alert, rem_modal, rem_prodModal, viewProd, prodInfo, prodBox}) => {
+
  console.log(topDeals)
   const deals = topDeals.map((item, index)=>{
     return <div class="col-sm-3 mt-2 mb-5" key={index}>
                  <div class="card carder">
-                        <div class="card-body">
+                        <div class="card-body " onClick={()=> viewProd(item)}>
                             <div class="card-img-actions img-box">
                                 <img src={item.poster} class="card-img" 
                                  alt="product image"/>
@@ -61,6 +61,47 @@ const HomeBan = ({handleClick, topDeals, editor, loader}) => {
      <div className='load'>
         <div className='loader'></div>
      </div>
+     }
+     {alert &&
+     <div class="alert alert-warning alert-dismissible Alert-box fade show" role="alert">
+     <strong>Product has been added succesfully </strong> 
+     <button type="button" class="close" onClick={()=>rem_modal()}>
+       <span aria-hidden="true">&times;</span>
+     </button>
+    </div>
+     }
+     {prodBox && prodInfo.map((item, index)=>{
+      return <div >
+        <div className='prodModal'>
+      <div className='prodbox shadow-lg' >
+        <div className='col-sm-12' >
+          <div className='row' key={index}>
+            <div className='col-sm-8'>
+            <img src={item.poster}  alt="" />
+            </div>
+            <div className='col-sm-4 text-left '>
+            <div className='prodInfo'>
+            <h4>{item.title}</h4>
+            <p className='text-muted'>{item.brand}</p>
+            <p className='text-muted'>{item.category}</p>
+            <div>
+              <label className='font-weight-bolder'>Price:</label><h2>&#8358;{prodInfo.price}</h2>
+              <button type="button" class="close" onClick={()=>rem_prodModal()}>
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+           </div>
+            </div>
+          </div>
+          
+        </div>
+        <div>
+
+        </div>
+      </div>
+     </div>
+      </div>
+     })
      }
     <div className='mx-5 banner mt-5 d-flex'>
         <div className ="banner-text p-5">

@@ -1,12 +1,16 @@
 import React from 'react'
 import { FaShoppingBag } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
+import jwt_decode from "jwt-decode";
+import Cookies from 'js-cookie';
 import { useState, useEffect } from 'react'
 import "./user.css"
-const UserNav = ({name}) => {
-    const [namer, setnamer] = useState();
+const UserNav = ({thename}) => {
+    const [name , setname] = useState()
     useEffect(()=>{
-        setnamer(name)
+     const usertoken = Cookies.get("UserLoginToken")
+      const decoder = jwt_decode(usertoken)
+      setname(decoder.Name)
     },[])
   return (
     <div>

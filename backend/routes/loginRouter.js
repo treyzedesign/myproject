@@ -30,12 +30,13 @@ loginRouter.post("/login", async(req, res)=>{
                     Accesstoken : jwt.sign({
                         id: feedback.id,
                         email: email,
-                        Name: feedback.firstName}, process.env.TOKEN_SECRET, {expiresIn: "1h"})
+                        Name: feedback.firstName}, process.env.TOKEN_SECRET, {expiresIn: "8h"})
                 }
                 const userVerified = feedback.verified
                 if(userVerified){
                     req.session.login_user = logged;
-                    let tokenChecker = await UserToken.find({id: feedback.id});
+                    
+                    let tokenChecker = await UserToken.findOne({id: feedback.id});
                     if(tokenChecker){
                         await UserToken.updateMany({id: feedback.id},
                             {
@@ -50,24 +51,20 @@ loginRouter.post("/login", async(req, res)=>{
                             name: feedback.firstName,
                             AccessToken : logged.Accesstoken
                         })
+                      
                     }
-                    res.status(201).json({
-                        message: "User logged in successfully",
-                        data: {
-                            id : logged.id,
-                            email : logged.email,
-                            Accesstoken : logged.Accesstoken
-                        },
-                        code: "login-success"
-                    })
+                    let cookieToken = logged.Accesstoken
                     res.cookie( "userAccessToken", cookieToken,
                     {
                       maxAge: 1000 * 60 * 60 * 6,
                       secure: false,
                       sameSite: true
-                    }
-                  )
-                    console.log('success');
+                    })
+                    res.status(201).json({
+                        message: "User logged in successfully",
+                        data: logged.Accesstoken
+                    })
+                    // console.log('success');
                 }else{
                     res.status(401).json({
                         message:"Account not Verified"

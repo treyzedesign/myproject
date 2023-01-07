@@ -10,9 +10,10 @@ import Admin from "./Admin/Admin"
 import SharedLayout from "./Components/SharedLayout";
 import Sharedlayout from "./Admin/Sharedlayout";
 import { useState, useEffect } from "react";
-import { Routes, Route} from 'react-router-dom'
+import { Routes, Route, useNavigate} from 'react-router-dom'
 import axios from "axios"
 import Cookie from 'js-cookie'
+import jwt_decode from "jwt-decode";
 import About from "./Components/About";
 import Adminprod from "./Admin/pages/Adminprod";
 import AdminUser from "./Admin/pages/AdminUser";
@@ -27,6 +28,10 @@ import SplitLayout from "./User/SplitLayout";
 import Userdash from "./User/Pages/Userdash";
 import Contact from "./Components/Contact";
 import EmailVerify from "./Components/EmailVerify";
+import Cookies from "js-cookie";
+import UserEdit from "./User/Pages/UserEdit";
+import Checkout from "./Components/Checkout";
+import SecureRoute from "./User/SecureRoute";
 
 const getItemsFromLocalStorage = () => {
 const result = localStorage.getItem("cart")
@@ -35,20 +40,99 @@ return cartItems
 }
 
 function App() {
-
+  const navigate = useNavigate()
   const [cart, setCart] = useState(getItemsFromLocalStorage());
   const [price, setprice] = useState();
+  const [Username, setusername] = useState([])
+
+  const [fname, setfname] = useState();
+  const [lname, setlname] = useState();
+  const [email, setemail] = useState();
+  const [add, setadd] = useState();
+  const [state, setstate] = useState();
+  const [country, setcountry] = useState();
+  const [tel, settel] = useState()
+  const [id, setid] = useState();
 
 
   const [loader, setLoader] = useState(false)
+  const [alert, setalert] = useState(false)
+  const [prodInfo, setInfo] = useState(false)
+  const [prodBox, setProdBox] = useState(false)
   const [topDeals, setTopDeals] = useState([])
   const [editor, setEditor] = useState([])
+
   const td_url = `http://localhost:3001/api/v1/products/season/Topdeals?limit=4`
   const ed_url = `http://localhost:3001/api/v1/products/season/editor?limit=4`
  
+   const fetchProducts = async (td_url, ed_url)=>{
+    setLoader(true)
+     try {
+      const {data} = await axios(td_url)
+      const {data: editors} = await axios(ed_url)
+      setTopDeals(data)
+      setEditor(editors)
+      setLoader(false)
+     } catch (error) {
+      setLoader(false)
+     }
+     
+   }
+   useEffect(() => {
+      fetchProducts(td_url, ed_url)
+      // const usertoken = Cookies.get("UserLoginToken")
+      // const decoder = jwt_decode(usertoken)
+      // setusername(decoder.Name)
+      // console.log(decoder.Name);
+   }, [])
+
+  const handleClick = (item)=>{
+    // setalert(true)
+  const {id} = item
+  const tem ={
+    id: item.id,
+    title : item.title,
+    poster: item.poster,
+    price: parseInt(item.price),
+    brand: item.brand,
+    amount: 1
+  }
+  console.log(id);
   
+  //look for item in cart array
+  let existingItem = cart.find(cartItem => cartItem.id == id);
+  //if item already exists
+  if (!existingItem) {
+      setCart(prev => [...prev, tem])
+      setalert(true)
+  }else{
+    setalert(false)
+  }
+  //make cart a string and store in local space
+    
+  }
+  const rem_modal = ()=>{
+    setalert(false)
+  }
 
+  const viewProd =(item)=>{
+    let infoset = setInfo(topDeals)
+    console.log(prodInfo);
+        setProdBox(true)
+  }
+  const rem_prodModal = ()=>{
+    setProdBox(false)
+  }
+  useEffect(() => {
+    //turn it into js
+    let stringCart = JSON.stringify(cart);
+    localStorage.setItem("cart", stringCart)
+    handlePrice()
 
+    
+  }, [cart])
+
+  // Cart functions
   const handleChange = (item, d) => {
     const ind = cart.indexOf(item);
     const arr = cart;
@@ -78,52 +162,12 @@ function App() {
     window.location.reload()
     // handlePrice()
   }
-
-   const fetchProducts = async (td_url, ed_url)=>{
-     try {
-      setLoader(true)
-      const {data} = await axios(td_url)
-      const {data: editors} = await axios(ed_url)
-      setTopDeals(data)
-      setEditor(editors)
-      setLoader(false)
-     } catch (error) {
-      setLoader(false)
-     }
-     
-   }
-   useEffect(() => {
-      fetchProducts(td_url, ed_url)
-   }, []);
-
-  const handleClick = (item)=>{
-  const {id} = item
-  const tem ={
-    id: item.id,
-    title : item.title,
-    poster: item.poster,
-    price: parseInt(item.price),
-    brand: item.brand,
-    amount: 1
+  const clearCart = ()=>{
+    localStorage.removeItem('cart')
+    window.location.reload()
   }
-  console.log(id);
-  
-  //look for item in cart array
-  let existingItem = cart.find(cartItem => cartItem.id == id);
-  //if item already exists
-  if (!existingItem) {
-      setCart(prev => [...prev, tem])
-  } 
-  //make cart a string and store in local space
-  }
-  useEffect(() => {
-    //turn it into js
-    let stringCart = JSON.stringify(cart);
-    localStorage.setItem("cart", stringCart)
-    handlePrice()
 
-    
-  }, [cart])
+
 // for the Admin
 
   const del_prod = async(item)=>{
@@ -145,11 +189,42 @@ function App() {
      })
    }
  }
- const [username, setUsername] = useState()
- const getdata = (data)=>{
-    console.log("coming from", data)
-    setUsername(data)
- }
+//  const [username, setUsername] = useState()
+//  const getdata = (data)=>{
+//     console.log("coming from", data)
+//     setUsername(data)
+//  }
+
+
+
+// UserDashboard
+let cookie = Cookies.get("UserLoginToken")
+const fetchUsers = async()=>{
+  if (!cookie){
+      console.log("bad");
+  }else{
+       
+      let decoder = jwt_decode(cookie)
+      console.log(decoder.id);
+      await axios.get(`http://localhost:3001/api/v1/signup/${decoder.id}`).then((feedback)=>{
+        console.log(feedback);
+        setfname(feedback.data[0].firstName)
+        console.log(fname);
+        setlname(feedback.data[0].lastName)
+        setemail(feedback.data[0].email)
+        setadd(feedback.data[0].address)
+        setstate(feedback.data[0].state)
+        setcountry(feedback.data[0].country)
+        setid(feedback.data[0].id)
+        settel(feedback.data[0].tel)
+      }).catch((fail)=>{
+        console.log(fail);
+      })
+    }
+  }
+useEffect(()=>{
+   fetchUsers()
+},[])
   return (
     <div className="App">
       {/* <HomeNav/> */}
@@ -166,22 +241,33 @@ function App() {
         <Route path="/admin-login" element={<AdminForm/>}></Route>
 
         {/* Profile */}
-        <Route path="/user/profile" element={<SplitLayout name={username}/>}>
-             <Route index element={<Userdash/>}/>
+        <Route path="/user/profile/" element={<SecureRoute><SplitLayout size= {cart.length}/></SecureRoute>}>
+             <Route index element={<Userdash 
+              fname={fname} lname={lname} address={add} email={email} state={state} country={country} tel={tel}
+             />}/>
+             <Route path="/user/profile/update_account" element={<UserEdit
+              fname={fname} lname={lname} address={add} email={email} state={state} country={country} id={id}
+             />}/>
         </Route>
         <Route path="/register" element={<UserReg/>}></Route>
-        <Route path="/login" element={<LogUser onClick={getdata}/>}></Route>
+        <Route path="/login" element={<LogUser />}></Route>
 
 
         <Route path="/user/verify/:email/:token" element={<EmailVerify/>}></Route>
 
         {/* users */}
-        <Route path='/' element={<SharedLayout size={cart.length} name={username}/>}>
+        <Route path='/' element={<SharedLayout size={cart.length} name={Username}/>}>
           <Route index element={<HomeBan
                   handleClick={handleClick}
                 topDeals={topDeals}
                 editor={editor}
                 loader={loader}
+                alert={alert}
+                rem_modal={rem_modal}
+                rem_prodModal={rem_prodModal}
+                viewProd={viewProd}
+                prodInfo={prodInfo}
+                prodBox = {prodBox}
             />}/>
           <Route path="about" element={<About/>}/>
           <Route path="contact-us" element={<Contact/>}/>
@@ -191,8 +277,10 @@ function App() {
                             handlePrice={handlePrice}
                             price={price}
                             deleteCartItem={deleteCartItem}
+                            clearCart={clearCart}
             />}/>
-        </Route>
+             <Route path="checkout-page/delivery" element={<Checkout/>}/>
+          </Route>
       </Routes>
     </div>
   );

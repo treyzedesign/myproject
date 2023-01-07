@@ -7,6 +7,7 @@ const Token = require("../model/token")
 const jwt = require('jsonwebtoken')
 const signupRouter = Router()
 const dotenv = require("dotenv")
+const UserAuth = require("../utils/UserAuth")
 dotenv.config()
 
 // add users
@@ -32,7 +33,7 @@ transporter.verify().then((data) => {
 })
 
 signupRouter.post("/signup",async (req, res) => {
-const {firstName, lastName, email, address, state, country, password} = req.body
+const {firstName, lastName, email,tel, address, state, country, password} = req.body
 
 try {
     const isUser = await User.findOne({email})
@@ -48,13 +49,14 @@ try {
             firstName: firstName,
             lastName : lastName,
             email: email,
+            tel: tel,
             address: address,
             state : state,
             country: country,
             password: signupHashPass
         }   
         if(newUser){
-            const emailToken = jwt.sign({email: email}, 'jesuswillforeverbethemosthighnomatterwhat', {expiresIn : '600000'})
+            const emailToken = jwt.sign({email: email}, 'jesuswillforeverbethemosthighnomatterwhat')
             const onlyToken ={
                 token :  emailToken,
                 id: user_id,
@@ -174,7 +176,7 @@ signupRouter.get("/signup/:id", async(req, res)=>{
             res.status(401).json({msg:"bad request"})
         }
     } catch (error) {
-        res.status(500).json({msg: error.message})
+        res.status(500).json({msg: error})
         
     }
 })
@@ -197,6 +199,39 @@ signupRouter.get("/signup/:email", async(req, res)=>{
     }
 })
 
-
+// update User 
+signupRouter.patch("/signup/:id", UserAuth ,async(req, res)=>{
+    const id = req.params.id
+    try {
+        if (typeof req.body == undefined || req.params.id == null) {
+            res.json({
+                status: 'error',
+                message: 'something went wrong! check your sent data',
+            });
+        }else{
+            const feedback = {
+                id: parseInt(req.params.id),
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                email: req.body.email,
+                address: req.body.address,
+                state: req.body.state,
+                country: req.body.country
+            };
+            if(feedback){
+                const newEdit = await User.updateOne(feedback)
+                if(newEdit){
+                    res.status(201).json({
+                        msg: "successful"
+                    })
+                }
+            }
+        }
+    } catch (error) {
+        res.status(500).json({
+            msg: error
+        })
+    }
+})
 
 module.exports = signupRouter
