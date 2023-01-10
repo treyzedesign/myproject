@@ -5,14 +5,14 @@ import Cookies from 'js-cookie'
 
 import axios from 'axios'
 const Userdash = ({fname, lname, email, address, state, country, tel}) => {
- 
+  
   return (
     <div>
       <div>
         <div className='text-center user-icon '>
           <h3>Account Information</h3>
           <FaUserCircle className='shadow-lg rounded-circle'/>
-          <h3>hi! {fname}</h3>
+          <h3>hi, {fname}</h3>
         </div>
         <div className='pl-5 pt-2'>
           <div className='ac-info p-3'>

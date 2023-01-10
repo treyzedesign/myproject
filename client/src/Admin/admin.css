@@ -50,8 +50,18 @@
     transition: 1s;
     transform: scale(1.1);
 }
-.adminside{
+.admin-form{
     /* display: flex; */
+    margin: 10vh auto;
+    width: 400px;
+    border-radius: 10px;
+}
+.admin-formlog{
+    /* display: flex; */
+    margin: 20vh auto;
+    width: 400px;
+    border-radius: 10px;
+
 }
 label{
     font-weight: 500;
@@ -81,7 +91,7 @@ label{
   }
 .product{
     /* width: 85%; */
-    /* padding-top: 20px; */
+    padding-top: 30px;
     background-color: rgb(187, 180, 180);
     min-height: 100vh;
 }

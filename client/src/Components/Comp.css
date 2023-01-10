@@ -88,5 +88,86 @@
 
 /* checkout page */
 .checkout{
-   background-color: #e7e7e7;
+   background-color: #fafafa;
+   min-height: 100vh;
+}
+.checkinfo{
+    border-radius: 10px;
+}
+.c-pro{
+    overflow-y: scroll;
+    max-height: 50vh;
+}
+.check_prod-img{
+    width: 100px;
+}
+.user-form{
+    /* display: flex; */
+    margin: 10vh auto;
+    width: 400px;
+    border-radius: 10px;
+}
+.user-formlog{
+    /* display: flex; */
+    margin: 20vh auto;
+    width: 400px;
+    border-radius: 10px;
+}
+.Arrow{
+    position: absolute;
+    top: 2vh;
+    left: 2vw;
+    font-size: 30px;
+    cursor: pointer;
+}
+.faedit{
+    position: absolute;
+    top: 10vh;
+    right: 3vw;
+    font-size: 20px;
+    cursor: pointer;
+}
+.editAdd-box{
+    position: fixed;
+    margin: 0 auto;
+    background-color: #080018a9;
+    /* text-align: center; */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1111;
+}
+.addbox{
+    margin: 0 auto;
+    padding: 20px;
+    width: 70%;
+    height: 70vh;
+    background-color: white;
+    border-radius: 15px;
+    position: fixed;
+    top: 15vh;
+    left: 15vw;
+    z-index: 1111;
+    overflow-y: scroll;
+  }
+  .editbox-close{
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 45px;
+  }
+  .radio{
+    /* height: 100px; */
+    padding: 5px;
+  }
+  input[type=radio]{
+    height: 25px;
+    width: 2rem;
+  }
+  input[type=radio]:checked{
+    accent-color: black;
+  }
+.payment{
+    height: 100vh;
 }

@@ -61,9 +61,9 @@ const UserReg = () => {
         <div className='loader'></div>
      </div>
      }
-         <div className='container m-0 m-auto w-25 mt-5 text-center'>
+         <div className='user-form px-5 py-3 shadow-lg '>
               <form className="form-signin" method='post'>
-                <h1 className="h3 mb-3 font-weight-normal">Welcome!,Please sign Up</h1>
+                <h1 className="h3 mb-3 font-weight-normal text-center">Welcome!, Please sign Up</h1>
                 <h4>{err }</h4>
                 {inputerr && <h4>input credentials</h4>}
                 <label for="inputfirstname" className="sr-only">firstName</label> 

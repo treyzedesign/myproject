@@ -63,19 +63,19 @@ const AdminReg = () => {
         <div className='loader'></div>
      </div>
      }
-    <div className='container text-center'>
+    <div className='admin-form px-5 py-3 shadow-lg '>
               <form className="form-signin" method='post'>
-                <h1 className="h3 mb-3 font-weight-normal">Welcome!,Please sign Up</h1>
+                <h1 className="h3 mb-3 font-weight-normal text-center">Welcome!,Please sign Up</h1>
                 <h4>{err}</h4>
                 {inputerr && <h4>input credentials</h4>}
                 <label for="inputfirstname" className="sr-only">firstName</label> 
-                <input type="text" id="" className="form-control" ref={firstnameRef} placeholder="First name" required/>
+                <input type="text" id="" className="form-control mt-2" ref={firstnameRef} placeholder="First name" required/>
                 <label className="sr-only">lastName</label>
-                <input type="text"  className="form-control" ref={lastnameRef} placeholder="Last name" required/>
+                <input type="text"  className="form-control mt-2" ref={lastnameRef} placeholder="Last name" required/>
                 <label className="sr-only">email</label>
-                <input type="email"  className="form-control" ref={emailRef} placeholder="email address" required/>
+                <input type="email"  className="form-control mt-2" ref={emailRef} placeholder="email address" required/>
                 <label className="sr-only">username</label>
-                <input type="text"  className="form-control" ref={usernameRef} placeholder="username" required/>
+                <input type="text"  className="form-control mt-2" ref={usernameRef} placeholder="username" required/>
                 {/* <select className="browser-default custom-select" ref={stateRef}>
                   <option disabled selected>Select State</option>
                   <option value="Abia">Abia</option>
@@ -123,9 +123,9 @@ const AdminReg = () => {
                   <option value="Togo">Togo</option>
                 </select> */}
                 <label className="sr-only">position</label>
-                <input type="text"  className="form-control" ref={positionRef} placeholder="position" required/>
+                <input type="text"  className="form-control mt-2" ref={positionRef} placeholder="position" required/>
                 <label className="sr-only">password</label>
-                <input type="password"  className="form-control" ref={passwordRef} placeholder="set  password" required/>
+                <input type="password"  className="form-control mt-2" ref={passwordRef} placeholder="set  password" required/>
                 <div className="checkbox mb-3">
                 </div>
                 <button className="btn btn-lg btn-primary btn-block" type="button" onClick={() => registerUser()}>Sign up</button><hr/>

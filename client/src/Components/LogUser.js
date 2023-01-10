@@ -5,6 +5,7 @@ import { useState, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Cookie from 'js-cookie'
 import "./Comp.css"
+import { FaArrowLeft } from 'react-icons/fa'
 
 const LogUser = (props) => {
     const navigate = useNavigate()
@@ -29,13 +30,13 @@ const LogUser = (props) => {
             }).then((feedback)=>{
                 console.log(feedback.data.data);
                 Cookie.set("UserLoginToken", feedback.data.data , {expires: 7, secure: false, path: "/", sameSite: true})
-                navigate("/user/profile")
+                navigate("/")
                 setLoader(false)
                 
                 // setdata(feedback.data.data.Name)
                 // props.onClick(feedback.data.data.Name)
               
-                window.location.reload("/user/profile")
+                window.location.reload("/")
             
             }).catch((fail)=>{
                 console.log(fail)
@@ -53,9 +54,11 @@ const LogUser = (props) => {
         <div className='loader'></div>
      </div>
      }
-    <div className='container m-0 m-auto w-sm-25 text-center mt-5'>
+    <div ><FaArrowLeft className='Arrow ' onClick={()=> navigate('/')}/></div>
+
+    <div className='user-formlog  px-5 py-3 shadow-lg'>
               <form className="form-signin">
-                <h1 className="h3 mb-3 font-weight-normal">Please sign in</h1>
+                <h1 className="h3 mb-3 font-weight-normal text-center">Please sign in</h1>
                 {inputerr && <h4>input credentials</h4>}
                 {err }
                 <label className="sr-only">Email address</label>
@@ -67,8 +70,7 @@ const LogUser = (props) => {
                 <button className="btn btn-lg btn-primary btn-block" type="button" onClick={()=> loginUser()}>Sign in</button><hr/>
                 <Link to="/register"><button className="btn btn-lg btn-warning btn-block mt-3" type="submit">sign up</button></Link>
             </form>
-    
-    </div>
+    </div>    
     </div>
   )
 }

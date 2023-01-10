@@ -29,22 +29,25 @@ const HomeNav = ({size, name}) => {
             <div class="col-sm-9">
                 <div class="links text-right  d-flex justify-content-around mt-3">
                     <span><Link to='/about' className='text-dark font-weight-bolder'>about</Link></span>
-                    <span><Link to='' className='text-dark d-flex font-weight-bolder dropdown-toggle 'data-toggle="dropdown" aria-expanded="true" >{isUser ?
+                    <span><div className='text-dark d-flex font-weight-bolder dropdown-toggle 'data-toggle="dropdown" aria-expanded="true" >{isUser ?
                         <div><FaUser className='mr-1'/>{user_name}</div>
                        :
                        <h6>Account</h6>
-                    }</Link>
+                    }</div>
                     <div class="dropdown-menu">
                       <div to='' class="dropdown-item bg-warning" >{isUser ? 
                       <div onClick={()=>{
                         Cookies.remove("UserLoginToken") 
                         navigate('/')
-                        }}>Sign Out</div> : 
+                        setTimeout(()=>{
+                          window.location.reload()
+                        },1)
+                        }}>Sign Out</div> 
+                        :
                       <div onClick={()=>{
                          navigate('/login')
-                         
                          }}>Sign In</div>}</div>
-                      <Link  to='/user/profile'  class="dropdown-item" >profile</Link>
+                      <Link  to='/user'  class="dropdown-item" >profile</Link>
                       <Link  to=''  class="dropdown-item">orders</Link>
                     </div>
                     </span>

@@ -57,12 +57,12 @@ function App() {
 
   const [loader, setLoader] = useState(false)
   const [alert, setalert] = useState(false)
-  const [prodInfo, setInfo] = useState(false)
+  const [item, setitem] = useState(false)
   const [prodBox, setProdBox] = useState(false)
   const [topDeals, setTopDeals] = useState([])
   const [editor, setEditor] = useState([])
 
-  const td_url = `http://localhost:3001/api/v1/products/season/Topdeals?limit=4`
+  const td_url = `http://localhost:3001/api/v1/products/season/Topdeals?limit=5`
   const ed_url = `http://localhost:3001/api/v1/products/season/editor?limit=4`
  
    const fetchProducts = async (td_url, ed_url)=>{
@@ -116,8 +116,8 @@ function App() {
   }
 
   const viewProd =(item)=>{
-    let infoset = setInfo(topDeals)
-    console.log(prodInfo);
+    let infoset = setitem(item)
+    console.log(item);
         setProdBox(true)
   }
   const rem_prodModal = ()=>{
@@ -177,13 +177,13 @@ function App() {
     console.log(token);
    const accept = window.confirm("are you sure you want to delete this product")
    if(accept){
+    window.location.reload()
      const del = await axios.delete(`http://localhost:3001/api/v1/products/${id}`,{
        headers: {
         "token" : token
       }
      }).then((feedback)=>{
        console.log(feedback);
-     window.location.reload()
      }).catch((fail)=>{
       console.log(fail);
      })
@@ -199,6 +199,7 @@ function App() {
 
 // UserDashboard
 let cookie = Cookies.get("UserLoginToken")
+let store = JSON.parse(localStorage.getItem("userAddress"))
 const fetchUsers = async()=>{
   if (!cookie){
       console.log("bad");
@@ -208,6 +209,19 @@ const fetchUsers = async()=>{
       console.log(decoder.id);
       await axios.get(`http://localhost:3001/api/v1/signup/${decoder.id}`).then((feedback)=>{
         console.log(feedback);
+        if (store == null){
+          let userAddressBook = {
+            firstname : feedback.data[0].firstName,
+            lastName : feedback.data[0].lastName,
+            email : feedback.data[0].email,
+            tel : feedback.data[0].tel,
+            address : feedback.data[0].address,
+            state : feedback.data[0].state,
+            country : feedback.data[0].country
+          }
+          localStorage.setItem("userAddress", JSON.stringify(userAddressBook))
+        }
+       
         setfname(feedback.data[0].firstName)
         console.log(fname);
         setlname(feedback.data[0].lastName)
@@ -222,6 +236,7 @@ const fetchUsers = async()=>{
       })
     }
   }
+  
 useEffect(()=>{
    fetchUsers()
 },[])
@@ -241,7 +256,7 @@ useEffect(()=>{
         <Route path="/admin-login" element={<AdminForm/>}></Route>
 
         {/* Profile */}
-        <Route path="/user/profile/" element={<SecureRoute><SplitLayout size= {cart.length}/></SecureRoute>}>
+        <Route path="/user/" element={<SecureRoute><SplitLayout size= {cart.length}/></SecureRoute>}>
              <Route index element={<Userdash 
               fname={fname} lname={lname} address={add} email={email} state={state} country={country} tel={tel}
              />}/>
@@ -266,7 +281,7 @@ useEffect(()=>{
                 rem_modal={rem_modal}
                 rem_prodModal={rem_prodModal}
                 viewProd={viewProd}
-                prodInfo={prodInfo}
+                item={item}
                 prodBox = {prodBox}
             />}/>
           <Route path="about" element={<About/>}/>
@@ -279,7 +294,9 @@ useEffect(()=>{
                             deleteCartItem={deleteCartItem}
                             clearCart={clearCart}
             />}/>
-             <Route path="checkout-page/delivery" element={<Checkout/>}/>
+           <Route path="shipping_page" element={<SecureRoute><Checkout 
+           cart={cart} price={price} fname={fname} lname={lname} tel={tel}address={add} email={email} state={state} country={country}
+           /></SecureRoute>}/>            
           </Route>
       </Routes>
     </div>

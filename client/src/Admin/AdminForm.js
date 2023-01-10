@@ -46,9 +46,9 @@ const AdminForm = () => {
         <div className='loader'></div>
      </div>
      }
-    <div className='container text-center mt-5'>
+    <div className='admin-formlog px-5 py-3 shadow-lg'>
               <form className="form-signin">
-                <h1 className="h3 mb-3 font-weight-normal">Please sign in</h1>
+                <h1 className="h3 mb-3 text-center font-weight-normal">Please sign in</h1>
                 {inputerr && <h4>input credentials</h4>}
                 {err && <h4>invalid credeentials</h4> }
                 <label className="sr-only">Email address</label>

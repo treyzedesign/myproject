@@ -27,7 +27,7 @@ const navigate = useNavigate()
             <span className='btn' onClick={() => handleChange(item, 1)}><FaPlus/></span>
             </div>
         </td>
-        <td class="text-center text-lg text-medium">{item.price}</td>
+        <td class="text-center text-lg text-medium">&#8358;{item.price}</td>
         <td class="text-center"><FaTrash onClick={()=> deleteCartItem(item)}/></td>
     </tr>
     </tbody>
@@ -69,7 +69,7 @@ const navigate = useNavigate()
                    <span> &#8358;{price}</span>
                    </h5>
                    <hr/>
-                   <button className='btn btn-warning mt-3 w-100' onClick={()=>{navigate('/checkout-page/delivery')}}> Checkout (&#8358;{price})</button>
+                   <button className='btn btn-warning mt-3 w-100' onClick={()=>{navigate('/shipping_page')}}> Checkout (&#8358;{price})</button>
                 </div> 
                 </div>
             </div>

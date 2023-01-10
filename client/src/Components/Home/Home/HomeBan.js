@@ -6,14 +6,14 @@ import market from "./images/market.jpg"
 import caro1 from "./images/caro1.jpg"
 import caro2 from "./images/caro2.jpg"
 import caro3 from "./images/caro3.jpg"
-import { Link } from 'react-router-dom';
+import { Link , useNavigate} from 'react-router-dom';
 
 import "./Home.css"
-const HomeBan = ({handleClick, topDeals, editor, loader, alert, rem_modal, rem_prodModal, viewProd, prodInfo, prodBox}) => {
-
- console.log(topDeals)
+const HomeBan = ({handleClick, topDeals, editor, loader, alert, rem_modal, rem_prodModal, viewProd, item, prodBox}) => {
+  const navigate = useNavigate()
+//  console.log(topDeals)
   const deals = topDeals.map((item, index)=>{
-    return <div class="col-sm-3 mt-2 mb-5" key={index}>
+    return <div class=" mt-2 mb-5" key={index}>
                  <div class="card carder">
                         <div class="card-body " onClick={()=> viewProd(item)}>
                             <div class="card-img-actions img-box">
@@ -25,9 +25,8 @@ const HomeBan = ({handleClick, topDeals, editor, loader, alert, rem_modal, rem_p
                             <div class="card-title">
                                 <h6 class="font-weight-semibold ">{item.title}</h6>
                             </div>
-                            <span class="text-muted mr-5" data-abc="true">{item.category}</span>
-                            <span class=" font-weight-bold">{item.price}</span>
-                            <div class="text-muted mb-3">{item.brand}</div>
+                            <span class=" font-weight-bold text-right">&#8358;{item.price}</span>
+                            <div class="text-muted mb-3">brand: {item.brand}</div>
                             <button type="button" class="btn btn-outline-primary bg-cart" onClick={()=>handleClick(item)}> Add to cart</button>
                         </div>
                     </div>               
@@ -35,7 +34,7 @@ const HomeBan = ({handleClick, topDeals, editor, loader, alert, rem_modal, rem_p
 
   })
   const choice = editor.map((item, index)=>{
-    return <div class="col-md-3 mt-2 mb-5" key={index}>
+    return <div class=" mt-2 mb-5" key={index}>
                  <div class="card carder">
                         <div class="card-body">
                             <div class="card-img-actions img-box">
@@ -64,29 +63,32 @@ const HomeBan = ({handleClick, topDeals, editor, loader, alert, rem_modal, rem_p
      }
      {alert &&
      <div class="alert alert-warning alert-dismissible Alert-box fade show" role="alert">
-     <strong>Product has been added succesfully </strong> 
+     <strong>Product has been added to Cart succesfully </strong> 
      <button type="button" class="close" onClick={()=>rem_modal()}>
        <span aria-hidden="true">&times;</span>
      </button>
     </div>
      }
-     {prodBox && prodInfo.map((item, index)=>{
-      return <div >
+     {prodBox && 
+       <div >
         <div className='prodModal'>
       <div className='prodbox shadow-lg' >
         <div className='col-sm-12' >
-          <div className='row' key={index}>
+          <div className='row' >
             <div className='col-sm-8'>
             <img src={item.poster}  alt="" />
             </div>
             <div className='col-sm-4 text-left '>
             <div className='prodInfo'>
-            <h4>{item.title}</h4>
-            <p className='text-muted'>{item.brand}</p>
-            <p className='text-muted'>{item.category}</p>
+            <h3>{item.title}</h3>
+            <div className='text-muted pt-1'>{item.brand}</div>
+            <div className='text-muted pt-1'>{item.category}</div>
+            <hr/>
+            <div className='text-muted pt-1'>Product Code: {item.id}</div>
             <div>
-              <label className='font-weight-bolder'>Price:</label><h2>&#8358;{prodInfo.price}</h2>
-              <button type="button" class="close" onClick={()=>rem_prodModal()}>
+              <label className='font-weight-bolder'>Price:</label><h2>&#8358;{item.price}</h2>
+              <button type="button" class="btn btn-outline-primary bg-cart" onClick={()=>handleClick(item)}> Add to cart</button>
+              <button type="button" class="close modal-close" onClick={()=>rem_prodModal()}>
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -95,20 +97,26 @@ const HomeBan = ({handleClick, topDeals, editor, loader, alert, rem_modal, rem_p
           </div>
           
         </div>
+        <div className='pt-5'>
+          <div><strong>{item.description}</strong></div>
+        </div>
+        <div className='pt-5'>
+          <h5>Specifications</h5>
+          <div>{item.spec}</div>
+        </div>
         <div>
 
         </div>
       </div>
      </div>
       </div>
-     })
      }
     <div className='mx-5 banner mt-5 d-flex'>
         <div className ="banner-text p-5">
             <h1>GET your products today on fleeks</h1>
             <p className='pt-3 pl-3 font-weight-bolder'>Register today to get the best affordable prices</p>
             <div>
-                <button className='mt-5 ml-5 font-weight-bolder'>Get Started</button>
+                <button className='mt-5 ml-5 font-weight-bolder' onClick={()=> navigate('/login')}>Get Started</button>
             </div>
         </div>
         <div className='ban-img pl-5 ml-5'>
@@ -147,12 +155,8 @@ const HomeBan = ({handleClick, topDeals, editor, loader, alert, rem_modal, rem_p
     </div>
     </div>
         <h3 className='sub-title p-2'>Top deals</h3>
-        <div class="container-fluid d-flex  mt-50 mb-50 ">    
-           <div className='col-sm-12'>
-                <div class="row">
+        <div class="container-fluid d-flex flex-wrap mt-50 mb-50 ">    
                 {deals}
-                </div>
-            </div> 
         </div>
         <h3 className='sub-title p-2'>Editor's choice</h3>
         <div class="container-fluid d-flex justify-content-center mt-50 mb-50 ">     
