@@ -10,8 +10,9 @@ const adminLogin = require("./routes/adminlogin");
 const vendorLogin = require("./routes/vendorlogin")
 const cartRouter = require("./routes/cart");
 const productRouter = require("./routes/products");
-const cors = require("cors")
+const orderRouter = require("./routes/OrderRoutes");
 
+const cors = require("cors");
 const app = express()
  const MAX_AGE = 1000 * 60 * 60 * 2208  // 92days
 
@@ -54,6 +55,8 @@ app.use("/api/v1", vendorLogin)
 app.use("/api/v1", cartRouter)
 // for product router
 app.use("/api/v1", productRouter)
+// for Order Router
+app.use("/api/v1", orderRouter)
 
 
 

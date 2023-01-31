@@ -17,6 +17,10 @@
 .searcher{
     width: 100%;
 }
+.search-btn{
+    
+}
+
 .nav-wrap{
     padding: 0;
 }
@@ -203,4 +207,40 @@
     top: 0;
     right: 0;
     font-size: 45px;
+  }
+
+  .detail-box{
+    position: fixed;
+    margin: 0 auto;
+    background-color: #080018a9;
+    /* text-align: center; */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1111;
+}
+.prod-detailbox{
+    margin: 0 auto;
+    padding: 20px;
+    width: 70%;
+    height: 100vh;
+    background-color: white;
+    /* border-radius: 15px; */
+    position: fixed;
+    top: 0vh;
+    left: 15vw;
+    z-index: 1111;
+    overflow-y: scroll;
+  }
+  .det-close{
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 45px;
+  }
+  .d-each-box{
+    border: 1px solid rgb(190, 182, 182);
+    padding: 20px;
+    border-radius: 10px;
   }

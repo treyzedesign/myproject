@@ -29,50 +29,7 @@ const Admin = () => {
      
   return (
     <>
-    <div className='container-fluid'>
-      <div className='col-md-12 mt-5'>
-        <div className='row'>
-          <div className='col-md-6'>
-            <div className=' card bg-white py-5 boxx'>
-                <div className='d-flex '>
-                  <h2 className='pt-4'>Total Number of Users on Fleeks</h2>
-                   <h1 className='number '>{alluser}</h1>
-                </div>
-            </div>
-          </div>
-          <div className='col-sm-6'>
-          <div className=' card bg-white py-5 boxx'>
-                <div className='d-flex '>
-                  <h2 className='pt-4'>Total Number of Products on Fleeks</h2>
-                   <h1 className='number '>{allproduct}</h1>
-                </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-      <div className='col-md-12 mt-5'>
-        <div className='row'>
-          <div className='col-md-6'>
-            <div className=' card bg-white py-5 boxx'>
-                <div className='d-flex '>
-                  <h2 className='pt-4'>Total Number of Users on Fleeks</h2>
-                   <h1 className='number '>{alluser}</h1>
-                </div>
-            </div>
-          </div>
-          <div className='col-sm-6'>
-          <div className=' card bg-white py-5 boxx'>
-                <div className='d-flex '>
-                  <h2 className='pt-4'>Total Number of Products on Fleeks</h2>
-                   <h1 className='number '>{allproduct}</h1>
-                </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
+      
     </>
   )
 }

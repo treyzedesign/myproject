@@ -2,17 +2,25 @@ import React from 'react'
 import { FaEdit } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import { useState, useRef , useEffect} from 'react'
-import { handlePayment } from './PayStackInterface'
+import { handlePayment} from './payment/PayStackInterface'
+import { payNow } from './payment/PayNow'
+import { PaystackButton } from 'react-paystack';
 import payment_options from "./image/payment_options.webp"
+import axios from 'axios'
 import "./Comp.css"
 import Cookies from 'js-cookie'
 
-const Checkout = ({cart, price}) => {
+const Checkout = ({cart, price, id}) => {
   const [editAddress, seteditAddress] = useState(false);
-  const [update, setupdate] = useState();
+ 
   let checkStore = JSON.parse(localStorage.getItem("userAddress"))
-  console.log(checkStore.country);
-  // const Cookie = Cookies.get("UserLoginToken")
+  // console.log(checkStore.country);
+  // console.log(id);
+  const Cookie = Cookies.get("UserLoginToken")
+  const navigate = useNavigate()
+  const ship = 521
+  const taxes =  Math.floor(0.8/100 * price)
+  const est = price + ship + taxes
   const firstref = useRef(null)
   const lastref = useRef(null)
   const emailref = useRef(null)
@@ -22,7 +30,12 @@ const Checkout = ({cart, price}) => {
   // const countryref = useRef(null)
 
   
-  
+  const config = {
+    reference: 'ref' + Math.floor(123456789 + Math.random() * 999999999),
+    email: checkStore.email,
+    amount: est * 100, //Amount is in the country's lowest currency. E.g Kobo, so 20000 kobo = N200
+    publicKey: 'pk_test_17bcdae32614d8cdb649c35a2fdbaf51b6b81b64',
+  };
 
   const editinfo = ()=>{
     // if(firstname.length > 0 && lastName.length > 0 && email.length > 0 && address.length > 0 && state.length > 0 
@@ -42,16 +55,54 @@ const Checkout = ({cart, price}) => {
       state : state
     }
     localStorage.setItem("userAddress", JSON.stringify(userUpdate))
-    setupdate(userUpdate)
+    // setupdate(userUpdate)
       seteditAddress(false)
   // }
   }
-  const payOnline = ()=>{
-    handlePayment(checkStore.email, price)
+
+  
+  const handlePaystackSuccessAction =  (reference) => {
+    console.log(reference);
+    const userdetails = {
+      userId : id,
+      refId : reference.reference,
+      product : cart.map(item => {
+          return  {
+              productId: item.id,
+              productName : item.title,
+              productImage : item.poster,
+              quantity : item.amount
+          }
+      }),
+      firstname: checkStore.firstname,
+      lastname: checkStore.lastName,
+      email : checkStore.email,
+      tel : checkStore.tel,
+      amount : est,
+      address : checkStore.address,
+      state: checkStore.state,
+      payment: "online"
   }
-  const navigate = useNavigate()
-  const ship = 521
-  const est = price + ship
+  // console.log(userdetails);
+  if(userdetails){
+   axios.post('http://localhost:3001/api/v1/order', userdetails, {
+      headers:{ "usertoken" : Cookie}
+    }).then((feedback)=>{
+      console.log(feedback);
+    }).catch((fail)=>{
+      console.log(fail);
+    })
+  }
+  };
+ const handlePaystackCloseAction = () => {
+    console.log('closed')
+  }
+  const componentProps = {
+      ...config,
+      text: 'Pay Online',
+      onSuccess: (reference) => handlePaystackSuccessAction(reference),
+      onClose: handlePaystackCloseAction,
+  }; 
   const cartItem = cart.map((item, index)=>{
     return <div  key={index}>
         <div className='check_prod'>
@@ -70,6 +121,9 @@ const Checkout = ({cart, price}) => {
         <hr/>
     </div>
   })
+  const payOnDelivery = ()=>{
+     payNow(checkStore, est, cart, id, Cookie)
+ }
   return (
     <div className='checkout'>
       {editAddress && 
@@ -194,7 +248,8 @@ const Checkout = ({cart, price}) => {
                                   <div className='mt-2'><img src={payment_options} alt="" /></div>
                                 </div>
                                 <div className="col-md-4 text-right">
-                                  <button className='btn btn-outline-success' onClick={()=> payOnline()}>Pay Now</button>
+                                <PaystackButton className='btn btn-outline-success ' {...componentProps} />
+                                  {/* <button className='btn btn-outline-success' onClick={()=> payOnline()}>Pay Now</button> */}
                                 </div> 
                               </div>
                             </div>
@@ -206,7 +261,7 @@ const Checkout = ({cart, price}) => {
                             <div className='text-muted'><i>Please note that you would have to make payment before opening your package. Once the seal is broken, the item can only be returned if it is damaged, defective or has missing parts.</i></div>
                             </div>
                             <div className="col-md-4 text-right pt-3">
-                               <button className='btn btn-outline-success'>Pay on delivery</button>
+                               <button className='btn btn-outline-success' onClick={()=> payOnDelivery()}>Pay on delivery</button>
                             </div> 
                           </div>
                         </div>
@@ -224,6 +279,11 @@ const Checkout = ({cart, price}) => {
                     <div className='d-flex pt-3 justify-content-around'>
                       <strong>Shipping fees : </strong>
                       <div><strong>&#8358;{ship}</strong> </div>
+                    </div> 
+                    <hr/>
+                    <div className='d-flex pt-3 justify-content-around'>
+                      <strong>Tax : </strong>
+                      <div><strong>&#8358;{taxes}</strong> </div>
                     </div> 
                     <hr/>
                     <div className='d-flex py-3 justify-content-around'>

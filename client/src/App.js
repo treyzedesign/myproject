@@ -32,6 +32,11 @@ import Cookies from "js-cookie";
 import UserEdit from "./User/Pages/UserEdit";
 import Checkout from "./Components/Checkout";
 import SecureRoute from "./User/SecureRoute";
+import { checkRoute } from "./User/SecureRoute";
+import MyOrder from "./User/Pages/MyOrder";
+import Searched from "./Components/Searched";
+import ForgotPass from "./Components/ForgotPass";
+import ChangePassword from "./Components/ChangePassword";
 
 const getItemsFromLocalStorage = () => {
 const result = localStorage.getItem("cart")
@@ -44,7 +49,7 @@ function App() {
   const [cart, setCart] = useState(getItemsFromLocalStorage());
   const [price, setprice] = useState();
   const [Username, setusername] = useState([])
-
+  //user info
   const [fname, setfname] = useState();
   const [lname, setlname] = useState();
   const [email, setemail] = useState();
@@ -53,7 +58,8 @@ function App() {
   const [country, setcountry] = useState();
   const [tel, settel] = useState()
   const [id, setid] = useState();
-
+  const [Order, setOrders] = useState([])
+  const [searchRe, setSearchRe] = useState()
 
   const [loader, setLoader] = useState(false)
   const [alert, setalert] = useState(false)
@@ -78,13 +84,9 @@ function App() {
      }
      
    }
-   useEffect(() => {
-      fetchProducts(td_url, ed_url)
-      // const usertoken = Cookies.get("UserLoginToken")
-      // const decoder = jwt_decode(usertoken)
-      // setusername(decoder.Name)
-      // console.log(decoder.Name);
-   }, [])
+  //  useEffect(() => {
+          
+  //  }, [])
 
   const handleClick = (item)=>{
     // setalert(true)
@@ -166,8 +168,21 @@ function App() {
     localStorage.removeItem('cart')
     window.location.reload()
   }
+  // const [searcher, setSearcher] = useState()
+  const finderbtn = (sea)=>{
+    
+    axios.get("http://localhost:3001/api/v1/products/").then((feedback)=>{
+        console.log(feedback.data);
+        let data = feedback.data
+        let filt = data.filter(item => item.title.toLowerCase().includes(sea.toLowerCase())) 
+          setSearchRe(filt)
+          navigate("searched_products/product")
+          console.log(searchRe);
+    })
+  }
+  
 
-
+  
 // for the Admin
 
   const del_prod = async(item)=>{
@@ -189,6 +204,39 @@ function App() {
      })
    }
  }
+
+ const del_order = async(item)=>{
+  const refId = item.refId
+  const token = Cookie.get('AccessToken')
+  const accept = window.confirm("are you sure you want to delete this order")
+  if(accept){
+    window.location.reload()
+    const del = await axios.delete(`http://localhost:3001/api/v1/order/${refId}`,{
+      headers: {
+       "token" : token
+     }
+    }).then((feedback)=>{
+      console.log(feedback);
+    }).catch((fail)=>{
+     console.log(fail);
+    })
+  }
+ }
+
+ const del_all_order = async ()=>{
+  const token = Cookie.get('AccessToken')
+  let accept = window.confirm("do you wish to proceed")
+  if(accept){
+    window.location.reload()
+    await axios.delete("http://localhost:3001/api/v1/order/", {
+       headers: {
+      "token" : token
+       }
+      }).then((feedback)=>{
+      console.log(feedback);
+    })
+  }   
+}
 //  const [username, setUsername] = useState()
 //  const getdata = (data)=>{
 //     console.log("coming from", data)
@@ -206,9 +254,9 @@ const fetchUsers = async()=>{
   }else{
        
       let decoder = jwt_decode(cookie)
-      console.log(decoder.id);
+      // console.log(decoder.id);
       await axios.get(`http://localhost:3001/api/v1/signup/${decoder.id}`).then((feedback)=>{
-        console.log(feedback);
+        // console.log(feedback);
         if (store == null){
           let userAddressBook = {
             firstname : feedback.data[0].firstName,
@@ -223,7 +271,7 @@ const fetchUsers = async()=>{
         }
        
         setfname(feedback.data[0].firstName)
-        console.log(fname);
+        // console.log(fname);
         setlname(feedback.data[0].lastName)
         setemail(feedback.data[0].email)
         setadd(feedback.data[0].address)
@@ -234,11 +282,22 @@ const fetchUsers = async()=>{
       }).catch((fail)=>{
         console.log(fail);
       })
+       await axios.get(`http://localhost:3001/api/v1/order/${decoder.id}?sort=desc`).then((feedback)=>{
+        // console.log(feedback);
+        setOrders(feedback.data)
+      }).catch((fail)=>{
+        console.log(fail);
+      })
     }
   }
+  // console.log(Order);
+  
+  
   
 useEffect(()=>{
+  fetchProducts(td_url, ed_url) 
    fetchUsers()
+   
 },[])
   return (
     <div className="App">
@@ -249,29 +308,31 @@ useEffect(()=>{
            <Route index element={<Admin/>}/>
            <Route path="/admin/products" element={<Adminprod del_prod = {del_prod}/>}/>
            <Route path="/admin/users" element={<AdminUser del_prod={del_prod}/>}/>
-           <Route path="/admin/orders" element={<AdminOrder/>}/>
+           <Route path="/admin/orders" element={<AdminOrder del_order={del_order} del_all_order={del_all_order}/>}/>
            <Route path="/admin/notifications" element={<AdminNote/>}/>
         </Route>
         <Route path="/admin-register" element={<AdminReg/>}></Route>
         <Route path="/admin-login" element={<AdminForm/>}></Route>
 
         {/* Profile */}
-        <Route path="/user/" element={<SecureRoute><SplitLayout size= {cart.length}/></SecureRoute>}>
+        <Route path="/user" element={<SecureRoute><SplitLayout size= {cart.length}/></SecureRoute>}>
              <Route index element={<Userdash 
               fname={fname} lname={lname} address={add} email={email} state={state} country={country} tel={tel}
              />}/>
              <Route path="/user/profile/update_account" element={<UserEdit
               fname={fname} lname={lname} address={add} email={email} state={state} country={country} id={id}
              />}/>
+             <Route path="/user/user_orders" element={<MyOrder id={id} Order={Order}/>}/>
         </Route>
         <Route path="/register" element={<UserReg/>}></Route>
         <Route path="/login" element={<LogUser />}></Route>
 
 
         <Route path="/user/verify/:email/:token" element={<EmailVerify/>}></Route>
-
+        <Route path="/user/password/forgotPass" element={<ForgotPass/>}></Route>
+        <Route path="/change_password/:id" element={<ChangePassword/>}></Route>
         {/* users */}
-        <Route path='/' element={<SharedLayout size={cart.length} name={Username}/>}>
+          <Route path='/' element={<SharedLayout size={cart.length} name={Username} finderbtn={finderbtn}/>}>
           <Route index element={<HomeBan
                   handleClick={handleClick}
                 topDeals={topDeals}
@@ -294,8 +355,13 @@ useEffect(()=>{
                             deleteCartItem={deleteCartItem}
                             clearCart={clearCart}
             />}/>
-           <Route path="shipping_page" element={<SecureRoute><Checkout 
-           cart={cart} price={price} fname={fname} lname={lname} tel={tel}address={add} email={email} state={state} country={country}
+          <Route path="searched_products/product" element={<Searched 
+          searchRe={searchRe}
+          handleClick={handleClick}
+          viewProd={viewProd}
+          />}/>
+          <Route path="shipping_page" element={<SecureRoute><Checkout 
+           cart={cart} price={price} id={id} 
            /></SecureRoute>}/>            
           </Route>
       </Routes>

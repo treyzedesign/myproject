@@ -69,6 +69,10 @@ const LogUser = (props) => {
                 </div>
                 <button className="btn btn-lg btn-primary btn-block" type="button" onClick={()=> loginUser()}>Sign in</button><hr/>
                 <Link to="/register"><button className="btn btn-lg btn-warning btn-block mt-3" type="submit">sign up</button></Link>
+                <div className='mt-3 text-center'>
+                    <Link to="/user/password/forgotPass">Forgot password?</Link>
+                </div>
+               
             </form>
     </div>    
     </div>

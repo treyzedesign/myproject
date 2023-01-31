@@ -8,7 +8,14 @@ const Cart = ({cart, handleChange, clearCart, price, deleteCartItem}) => {
 const navigate = useNavigate()
   // handlePrice()
 
-  
+const ship_page =()=>{
+  if(cart == null){
+    navigate('/cart')
+  }else{
+    navigate('/shipping_page')
+
+  }
+}
   const placeCart = cart.map((item, index)=>{
     return <tbody >
     <tr key={index}>
@@ -69,7 +76,7 @@ const navigate = useNavigate()
                    <span> &#8358;{price}</span>
                    </h5>
                    <hr/>
-                   <button className='btn btn-warning mt-3 w-100' onClick={()=>{navigate('/shipping_page')}}> Checkout (&#8358;{price})</button>
+                   <button className='btn btn-warning mt-3 w-100' onClick={()=>ship_page()}> Checkout (&#8358;{price})</button>
                 </div> 
                 </div>
             </div>

@@ -2,13 +2,16 @@ import React from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import jwt_Decode from 'jwt-decode'
-import { FaShoppingBag, FaCartPlus, FaUser } from 'react-icons/fa'
+import { FaShoppingBag, FaCartPlus, FaUser, FaSearchengin, FaSearch } from 'react-icons/fa'
 import { useState, useEffect } from 'react'
 import './Home.css'
-const HomeNav = ({size, name}) => {
+const HomeNav = ({size, finderbtn}) => {
   const [isUser, setIsUser] =useState(false)
   const [user_name, setUser_name] = useState()
+  const [search, setSearch] = useState("")
   const navigate = useNavigate()
+  // console.log(search);
+  
   useEffect(()=>{
     const usertoken = Cookies.get("UserLoginToken")
     if (usertoken) {
@@ -18,26 +21,28 @@ const HomeNav = ({size, name}) => {
     }
   },[])
   return (
-    <div class="container-fluid nav-wrap">
-      <div class="col-sm-12 mt-2">
-        <div class="row">
-            <div class="col-sm-3">
-                <div class="logo">
+    <div className="container-fluid nav-wrap">
+      <div className="col-sm-12 mt-2">
+        <div className="row">
+            <div className="col-sm-3">
+                <div className="logo">
                     <Link to="/" className='text-decoration-none shop-bag'><h1><FaShoppingBag className='home-icon mr-2 mb-2'/>Fleeks</h1></Link>
                 </div>
             </div>
-            <div class="col-sm-9">
-                <div class="links text-right  d-flex justify-content-around mt-3">
+            <div className="col-sm-9">
+                <div className="links text-right  d-flex justify-content-around mt-3">
                     <span><Link to='/about' className='text-dark font-weight-bolder'>about</Link></span>
                     <span><div className='text-dark d-flex font-weight-bolder dropdown-toggle 'data-toggle="dropdown" aria-expanded="true" >{isUser ?
                         <div><FaUser className='mr-1'/>{user_name}</div>
                        :
                        <h6>Account</h6>
                     }</div>
-                    <div class="dropdown-menu">
-                      <div to='' class="dropdown-item bg-warning" >{isUser ? 
+                    <div className="dropdown-menu">
+                      <div to='' className="dropdown-item bg-warning" >{isUser ? 
                       <div onClick={()=>{
                         Cookies.remove("UserLoginToken") 
+                        localStorage.removeItem("cart")
+                        localStorage.removeItem("userAddress")
                         navigate('/')
                         setTimeout(()=>{
                           window.location.reload()
@@ -47,8 +52,8 @@ const HomeNav = ({size, name}) => {
                       <div onClick={()=>{
                          navigate('/login')
                          }}>Sign In</div>}</div>
-                      <Link  to='/user'  class="dropdown-item" >profile</Link>
-                      <Link  to=''  class="dropdown-item">orders</Link>
+                      <Link  to='/user'  className="dropdown-item" >profile</Link>
+                      <Link  to='/user/user_orders'  className="dropdown-item">orders</Link>
                     </div>
                     </span>
                     <span><Link to='/contact-us'  className='text-dark font-weight-bolder'>contact</Link></span>
@@ -63,18 +68,19 @@ const HomeNav = ({size, name}) => {
           <div className='row'>
             <div className='col-sm-2'>
                  <div className='pt-2 text-center'><Link to='' className='text-light font-weight-bolder dropdown-toggle'data-toggle="dropdown" aria-expanded="false" >category</Link>
-                    <div class="dropdown-menu">
-                      <Link  to='' class="dropdown-item" >male fashion</Link>
-                      <Link  to=''  class="dropdown-item" >female fashion</Link>
-                      <Link  to=''  class="dropdown-item">computing</Link>
-                      <Link  to=''  class="dropdown-item">electronics</Link>
-                      <Link  to=''  class="dropdown-item">gaming</Link>
+                    <div className="dropdown-menu">
+                      <Link  to='' className="dropdown-item" >male fashion</Link>
+                      <Link  to=''  className="dropdown-item" >female fashion</Link>
+                      <Link  to=''  className="dropdown-item">computing</Link>
+                      <Link  to=''  className="dropdown-item">electronics</Link>
+                      <Link  to=''  className="dropdown-item">gaming</Link>
                     </div>
                     </div>
             </div>
             <div className='col-sm-8'>
-            <form >
-              <input class="form-control searcher" type="text" placeholder="Search your products,brands and categories" aria-label="Search"/>
+            <form className='d-flex'>
+              <input className="form-control searcher" type="text" placeholder="Search your products,brands and categories" onChange={(e)=>{setSearch(e.target.value)}} aria-label="Search"/>
+              <button type='button' className='search-btn-div btn btn-light' onClick={()=> finderbtn(search)} ><FaSearch className='search-btn'/></button>
             </form>
             </div>
             <div className='col-sm-2'>

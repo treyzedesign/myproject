@@ -15,7 +15,7 @@ const UserSide = () => {
           <h6><FaUserEdit/> Edit Profile</h6>
         </div>
       </Link>
-      <Link to=""  className='text-decoration-none side-link'>
+      <Link to="/user/user_orders"  className='text-decoration-none side-link'>
         <div>
           <h6><FaParachuteBox/> orders</h6>
         </div>

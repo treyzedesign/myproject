@@ -89,6 +89,59 @@ try {
 }
 })
 
+//forgot Password
+
+signupRouter.post("/signup/password", async(req,res)=>{
+    const {email} = req.body
+    try {
+        const feedback = await User.findOne({email: email})
+        
+        if(feedback){
+            const url = "http://localhost:3000/"
+            let info = await transporter.sendMail({
+                from : process.env.USER,
+                to: email,
+                subject : "hello" + " " + "(" + feedback.firstName + ")" + " " + "(Change Of Password)",
+                html: `<p>Please click the link the below to change your password</p>
+                        <p>Click the link : <a href=${url + "change_password/" + feedback.id }> press Here</a> to proceed</p>`
+            }).then((feedback)=>{
+                res.send(feedback)
+            }).catch((fail)=>{
+                res.send(fail)
+            })
+            
+        }else{
+            res.status(401).json({
+                msg: "User not found"
+            })
+        }
+    } catch (error) {
+        res.status(500).json({
+            mgs: "error"
+            
+
+        })
+    }
+})
+
+// change password
+
+signupRouter.patch('/signup/changePassword', async (req, res)=>{
+    const {id, password} = req.body
+            const hasher = await bcrypt.hash(password, 10)
+            // console.log(hasher);
+            await User.findOne({id: id}).updateOne({
+                $set : {
+                    password : hasher
+                }
+            }).then((feedback)=>{
+                res.send(feedback)
+            }).catch((fail)=>{
+                res.send(fail)
+            })
+    
+})
+// Verify Email
 signupRouter.post("/verifyEmail", async(req, res)=>{
     const {mail, emailtoken} = req.body
     console.log(req.body)

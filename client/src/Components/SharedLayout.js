@@ -4,10 +4,10 @@ import HomeNav from './Home/Home/HomeNav'
 import Footer from './Footer'
 import "./Comp.css"
 
-const SharedLayout = ({size, name}) => {
+const SharedLayout = ({size, name, finderbtn}) => {
   return (
     <div>
-        <HomeNav size={size} name={name}/>
+        <HomeNav size={size} name={name} finderbtn={finderbtn}/>
         <Outlet className="outlet"/>
         <Footer/>
     </div>

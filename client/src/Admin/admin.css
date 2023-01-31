@@ -122,5 +122,11 @@ marquee{
     color: white;
 }
 .table-cont{
-    width: 70%;
+    width: 100%;
+}
+
+/* order page */
+.order_btn{
+    font-size: 25px;
+    cursor: pointer;
 }

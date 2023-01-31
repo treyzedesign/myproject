@@ -4,27 +4,24 @@ import { useState, useEffect, useRef} from 'react'
 import "../admin.css"
 const AdminUser = () => {
   const [Users, setUsers] = useState([]);
-  const filterRef = useRef(null)
-  const filt = []
-
-  const finder =  ()=>{
-    const find = filterRef.current.value
-    filt.push(find)
-    console.log(filt[0]);
-    // window.location.reload()
-  }
+  const [filter, setfilter] = useState("")
   const user_url = `http://localhost:3001/api/v1/signup/`
   const fetchUsers = async(user_url)=>{
      await axios.get(user_url).then((feedback)=>{
       console.log(feedback.data)
+      let data = feedback.data
       setUsers(feedback.data)
+
      })
   }
   useEffect(() => {
     fetchUsers(user_url)
   }, []);
-
-  const myUsers = Users.map((item, index)=>{
+  const life = filter
+  const myUsers = Users.filter(item => item.id.includes(life) ||
+                                       item.firstName.trim().includes(life) ||
+                                       item.lastName.trim().includes(life) ||
+                                       item.email.trim().includes(life)).map((item, index)=>{
     return <div class="row">
     <div class="col-md-12">
     <div class="table-wrap">
@@ -63,13 +60,12 @@ const AdminUser = () => {
         <div class="container table-cont">
           <div class="row justify-content-center">
             <div class="col-md-6 text-center mb-5">
-              <h2 class="heading-section bg-secondary">Product Table</h2>
+              <h2 class="heading-section bg-secondary mt-5">Users Table</h2>
             </div>
           </div>
           <div className='mb-5'> 
-             <h5>filter</h5>
-              <input placeholder='by id' key="" ref={filterRef}/> 
-            <button className='btn btn-warning ml-5' onClick={()=> finder()}>submit</button>
+              <h5>filter</h5>
+              <input placeholder='by id, firstname, lastname, email' className='form-control' onChange={(e)=>{setfilter(e.target.value)}}/> 
             </div>
            {myUsers}
         </div>

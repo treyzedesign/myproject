@@ -171,3 +171,10 @@
 .payment{
     height: 100vh;
 }
+/* about page */
+
+.about{
+    width: 60%;
+    margin: 0 auto;
+    border-radius: 10px;
+}
