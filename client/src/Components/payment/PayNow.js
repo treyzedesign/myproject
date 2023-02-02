@@ -1,7 +1,8 @@
 import axios from "axios";
-// import { useState } from "react";
+import { useState } from "react";
 
-export const payNow = async (checkStore, amount, cart, userId, cookie)=>{
+
+export const payNow = async (checkStore, amount, cart, userId, cookie, confirm)=>{
     // console.log(cart, checkStore, amount, userId);
     const refId = 'ref' + Math.floor(123456789 + Math.random() * 999999999);
     // console.log(cart.find("id"));
@@ -30,6 +31,7 @@ export const payNow = async (checkStore, amount, cart, userId, cookie)=>{
         headers:{ "usertoken" : cookie}
       }).then((feedback)=>{
         console.log(feedback);
+        
       }).catch((fail)=>{
         console.log(fail);
       })

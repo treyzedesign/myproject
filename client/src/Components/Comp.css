@@ -120,6 +120,8 @@
     font-size: 30px;
     cursor: pointer;
 }
+
+/* checkout Page */
 .faedit{
     position: absolute;
     top: 10vh;
@@ -171,6 +173,19 @@
 .payment{
     height: 100vh;
 }
+.confirmbox{
+    margin: 0 auto;
+    padding: 20px;
+    width: 40%;
+    height: 30vh;
+    background-color: white;
+    border-radius: 15px;
+    position: fixed;
+    top: 40vh;
+    left: 30vw;
+    z-index: 1111;
+    
+  }
 /* about page */
 
 .about{

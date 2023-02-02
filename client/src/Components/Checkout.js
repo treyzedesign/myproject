@@ -12,6 +12,8 @@ import Cookies from 'js-cookie'
 
 const Checkout = ({cart, price, id}) => {
   const [editAddress, seteditAddress] = useState(false);
+  const [confirm , setConfirm] = useState(false);
+  const [orderPlaced, setorderPlaced] = useState(true);
  
   let checkStore = JSON.parse(localStorage.getItem("userAddress"))
   // console.log(checkStore.country);
@@ -121,11 +123,38 @@ const Checkout = ({cart, price, id}) => {
         <hr/>
     </div>
   })
+
   const payOnDelivery = ()=>{
-     payNow(checkStore, est, cart, id, Cookie)
+     payNow(checkStore, est, cart, id, Cookie, confirm).then(()=>{
+      setorderPlaced(false)
+     })
  }
   return (
     <div className='checkout'>
+      {confirm && 
+        <div className='editAdd-box'>
+          <div className='confirmbox'>
+            {orderPlaced  ? 
+                <center className="border border-success rounded-sm">
+                <h4>Please confirm order</h4>
+                <p className='py-4'>
+                  <button className='btn btn-outline-success ' onClick={()=> payOnDelivery()}>confirm</button>
+                  <button className='btn btn-danger ' onClick={()=> setConfirm(false)}>cancel</button>
+                </p>
+              </center> 
+              :<center className="border border-success rounded-sm">
+                <h4>Order placed Successfully</h4>
+                <p className='py-4'>
+                  <button className='btn btn-success ' onClick={()=> {
+                    window.location.reload()
+                    setConfirm(false)}}>Okay</button>
+                </p>
+              </center>
+            }    
+          </div>
+          
+        </div>
+      }
       {editAddress && 
         <div className='editAdd-box'>
             <div className='addbox shadow-lg'>
@@ -261,7 +290,7 @@ const Checkout = ({cart, price, id}) => {
                             <div className='text-muted'><i>Please note that you would have to make payment before opening your package. Once the seal is broken, the item can only be returned if it is damaged, defective or has missing parts.</i></div>
                             </div>
                             <div className="col-md-4 text-right pt-3">
-                               <button className='btn btn-outline-success' onClick={()=> payOnDelivery()}>Pay on delivery</button>
+                               <button className='btn btn-outline-success' onClick={()=> setConfirm(true)}>Pay on delivery</button>
                             </div> 
                           </div>
                         </div>
