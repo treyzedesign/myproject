@@ -174,9 +174,9 @@ function App() {
     axios.get("http://localhost:3001/api/v1/products/").then((feedback)=>{
         console.log(feedback.data);
         let data = feedback.data
-        let filt = data.filter(item => item.title.toLowerCase().includes(sea.toLowerCase())) 
+        let filt = data.filter(item => item.title.toLowerCase().includes(sea.toLowerCase()) || item.category.toLowerCase().includes(sea.toLowerCase())) 
           setSearchRe(filt)
-          navigate("searched_products/product")
+          navigate("searched_products")
           console.log(searchRe);
     })
   }
@@ -355,7 +355,7 @@ useEffect(()=>{
                             deleteCartItem={deleteCartItem}
                             clearCart={clearCart}
             />}/>
-          <Route path="searched_products/product" element={<Searched 
+          <Route path="searched_products" element={<Searched 
           searchRe={searchRe}
           handleClick={handleClick}
           viewProd={viewProd}
