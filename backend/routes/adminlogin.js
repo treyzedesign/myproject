@@ -4,8 +4,19 @@ const Admin = require("../model/Admin")
 const AdminToken = require("../model/AdminToken")
 const jwt = require('jsonwebtoken')
 const loginRouter = require("./loginRouter")
-
 const adminLogin = Router()
+const Pusher = require("pusher");
+const dotenv = require("dotenv")
+dotenv.config()
+const pusher = new Pusher({
+    appId : process.env.appId,
+    key : process.env.key,
+    secret : process.env.secret,
+    cluster : "eu",
+    useTLS: true
+});
+
+
 
 adminLogin.get("/admin-login", (req, res)=>{
     res.send({msg: "welcome back "})
@@ -57,6 +68,9 @@ adminLogin.post("/admin-login", async(req, res)=>{
                     message: "admin logged in successfully",
                     code: "login successful"          
                 })
+                pusher.trigger("my-channel", "my-event", {
+                    message: "hello world"
+                  });
 
             }else{
               res.status(404).json({

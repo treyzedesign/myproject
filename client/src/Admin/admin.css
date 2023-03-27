@@ -26,13 +26,12 @@
 }
 .outlet{
     margin-top: 70px;
-    background-color: rgb(235, 232, 232);
     width: 85%;
     position: absolute;
     bottom: 0;
     right: 0;
     top: 0;
-    min-height: 100vh;
+    
 }
 .bar-item{
     font-size: larger;
@@ -90,16 +89,13 @@ label{
     opacity: 0.9;
   }
 .product{
-    /* width: 85%; */
-    padding-top: 30px;
-    background-color: rgb(247, 245, 245);
-    min-height: 100vh;
 }
 .p-h1{
     background-color: none;
 }
 .prod-box{
     width: 40%;
+    margin-top: 30vh;
     /* background-color: white; */
 }
 .prod-box label{
@@ -134,13 +130,16 @@ marquee{
 .bar-chart{
     height: 200px;
 }
+.pie-chart{
+    text-align: center;
+}
 .total{
     display: flex;
     justify-content: space-evenly;
     flex-wrap: wrap;
 }
 .t-product{
-    width: 300px;
+    width: 250px;
     height: 150px;
     background-color: white;
     border-top: 10px solid rgba(25, 4, 46);

@@ -21,8 +21,10 @@ orderRouter.post("/order", UserAuth, async (req, res) => {
 //get all
 
 orderRouter.get("/order", async (req, res) => {
+  const createdAt = req.query.date == 'desc' ? -1 : 1
     try {
-      const orders = await Order.find();
+      const orders = await Order.find()
+      .sort({createdAt: createdAt});
       res.status(200).json(orders);
     } catch (err) {
       res.status(500).json(err);
@@ -85,49 +87,4 @@ orderRouter.patch("/order/status", async(req,res)=>{
   }
 })
 
-// get Income 
-orderRouter.get("/order/total", async(req,res)=>{
-  const total = await Order.countDocuments({}).exec()
-  console.log(total)
-  if(total){
-      res.status(200).json({
-          data: total
-      })
-  }else {
-      res.send({
-          data: 0
-      })
-  }
-})
-
-orderRouter.get("/order/income", async (req, res) => {
-  const date = new Date();
-  const lastMonth = new Date(date.setMonth(date.getMonth() - 1));
-  const previousMonth = new Date(new Date().setMonth(lastMonth.getMonth() - 1));
-   
-  try {
-    const income = await Order.aggregate([
-      { $match: { createdAt: { $gte: previousMonth } } },
-      {
-        $project: {
-          month: { $month: "$createdAt" },
-          sales: "$amount",
-        },
-      },
-      {
-        $group: {
-          _id: "$month",
-          total: { $sum: "$sales" },
-        },
-      },
-    ]);
-    if (income) {
-      res.status(200).json({
-        data: income
-      })
-    }
-  }catch(err){
-    res.status(500).json(err);
-  }
-})
 module.exports = orderRouter

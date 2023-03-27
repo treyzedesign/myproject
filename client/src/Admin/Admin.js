@@ -7,10 +7,12 @@ import "./admin.css"
 import axios from 'axios'
 import { Router, Routes, Route } from 'react-router-dom'
 import BarChart from './BarChart'
+import PieChart from './PieChart'
 
 const Admin = () => {
   const [alluser, setAlluser] = useState([])
   const [allproduct, setAllproduct] = useState([])
+  const [allorder, setallorder] = useState()
   const [OrderAmount, setOrderAmount] = useState()
   const [chart, setchart] = useState([])
 
@@ -31,7 +33,8 @@ const Admin = () => {
         return acc += item.amount
        },0)
        console.log(cal);
-       setOrderAmount(cal)
+      setallorder(feedback.data.length)
+      setOrderAmount(cal)
       setchart(feedback.data)
     })
   }
@@ -63,9 +66,29 @@ const Admin = () => {
               <h1><b> {allproduct}</b></h1>
           </div>
           </div>
+          <div className='t-product shadow-lg m-2'>
+          <div className='text-center'>
+              <h3 className='mt-2 p-2'><b>Total Orders</b></h3>
+              <h1><b> {allorder}</b></h1>
+          </div>
+          </div>
         </div>
-        <div className='mt-5 px-4'>
-          <BarChart className='bar-chart p-5' chart={chart}/>    
+       
+      </div>
+      <div className='container-fluid'>
+      <div className='col-lg-12'>
+          <div className='row d-flex justify-content-between'>
+            <div className='col-lg-4'>
+              <div className='text-center'>
+                <PieChart className='bar-chart p-5 text-center' alluser={alluser} allproduct={allproduct} chart={chart}/>    
+              </div>
+            </div>
+            <div className='col-lg-8'>
+              <div className=' px-4 text-center'>
+                <BarChart className='bar-chart p-5' chart={chart}/>    
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       

@@ -9,7 +9,7 @@ export const AdminOrder = ({del_order, del_all_order}) => {
   const [details, setDetails]= useState(false)
   const [dItem, setdItem] = useState([])
 
-  const order_url = `http://localhost:3001/api/v1/order/`
+  const order_url = `http://localhost:3001/api/v1/order?date=desc`
   const fetchOrders = async(order_url)=>{
      await axios.get(order_url).then((feedback)=>{
       console.log(feedback.data)
@@ -41,12 +41,13 @@ export const AdminOrder = ({del_order, del_all_order}) => {
     <table class="table text-center">
     <thead class="thead-primary">
     <tr key={index} className="text-black bg-secondary">
-    <th>#</th>
+    <th>s/n</th>
     <th>OrderId</th>
     <th>Email</th>
     <th>Amount</th>
     <th>Product No</th>
-    <th>payment</th>
+    <th>Payment</th>
+    <th>Date</th>
      <th></th>
      <th></th>
     </tr>
@@ -59,6 +60,7 @@ export const AdminOrder = ({del_order, del_all_order}) => {
     <td>&#8358;{item.amount}</td>
     <td>{item.product.length}</td>
     <td>{item.payment}</td>
+    <td>{item.createdAt.slice(0,10)}</td>
     <td><FaBoxOpen className='order_btn' onClick={()=> orderInfo(item)}/></td>
     <td><FaTrash className='order_btn' onClick={()=> del_order(item)}/></td>
     </tr>
@@ -128,7 +130,7 @@ export const AdminOrder = ({del_order, del_all_order}) => {
         <div class="container table-cont">
           <div class="row justify-content-center">
             <div class="col-md-6 text-center mb-5">
-              <h2 class="heading-section bg-secondary mt-5">Users Table</h2>
+              <h2 class="heading-section bg-secondary mt-5">Orders Table</h2>
             </div>
           </div>
           <div className='mb-5'> 
@@ -136,7 +138,7 @@ export const AdminOrder = ({del_order, del_all_order}) => {
               <div className='row'>
                 <div className='col-9'>
                 <h5>filter</h5>
-                 <input placeholder='by order_Id , email, payment type' className='form-control' onChange={(e)=>{setfilter(e.target.value)}}/> 
+                 <input placeholder='by order_Id , email, payment type' className='form-control shadow-lg' onChange={(e)=>{setfilter(e.target.value)}}/> 
                 </div>
                 <div className='col-3 text-right mt-1'>
                 <button className='btn btn-danger mt-4' onClick={()=> del_all_order()}> delete table</button>

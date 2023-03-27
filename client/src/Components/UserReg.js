@@ -43,11 +43,11 @@ const UserReg = () => {
             }).then((feedback)=>{
                 console.log(feedback)
                 setLoader(false)
-                setErr(false)
             }).catch((fail)=>{
                 console.log(fail)
                 setLoader(false)
-                // setErr(fail)
+                setErr(fail.response.data.msg)
+                setInputerr(false)          
             })
 
      }else{
@@ -64,8 +64,10 @@ const UserReg = () => {
          <div className='user-form px-5 py-3 shadow-lg '>
               <form className="form-signin" method='post'>
                 <h1 className="h3 mb-3 font-weight-normal text-center">Welcome!, Please sign Up</h1>
-                <h4>{err }</h4>
-                {inputerr && <h4>input credentials</h4>}
+                <div className="text-center">
+                    {inputerr && <small className="p-2 text-danger">please input all fields</small>}
+                    <small className="p-2 text-danger">{err}</small>
+                </div>
                 <label for="inputfirstname" className="sr-only">firstName</label> 
                 <input type="text" id="" className="form-control" ref={firstref} placeholder="First name" required/>
                 <label className="sr-only">lastName</label>

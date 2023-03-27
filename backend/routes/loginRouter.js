@@ -13,10 +13,6 @@ loginRouter.get("/login", (req, res)=>{
 loginRouter.post("/login", async(req, res)=>{
     const {email, password} = req.body
     const feedback = await User.findOne({email: email });
-    // const savedEmail = feedback.email
-    // console.log(savedEmail);
-    
-    // console.log(feedback.firstName)
     try {
         if(feedback){
             const saved_Password= feedback.password;
@@ -51,20 +47,18 @@ loginRouter.post("/login", async(req, res)=>{
                             name: feedback.firstName,
                             AccessToken : logged.Accesstoken
                         })
-                      
                     }
-                    let cookieToken = logged.Accesstoken
-                    res.cookie( "userAccessToken", cookieToken,
-                    {
-                      maxAge: 1000 * 60 * 60 * 6,
-                      secure: false,
-                      sameSite: true
-                    })
+                    // let cookieToken = logged.Accesstoken
+                    // res.cookie( "userAccessToken", cookieToken,
+                    // {
+                    //   maxAge: 1000 * 60 * 60 * 6,
+                    //   secure: false,
+                    //   sameSite: true
+                    // })
                     res.status(201).json({
                         message: "User logged in successfully",
                         data: logged.Accesstoken
                     })
-                    // console.log('success');
                 }else{
                     res.status(401).json({
                         message:"Account not Verified"
@@ -79,7 +73,7 @@ loginRouter.post("/login", async(req, res)=>{
         }
         else{
             console.log('faill');
-            res.status(400).json({msg:"invalid credentials"})  
+            res.status(400).json({message:"invalid credentials"})  
         }
     } catch (error) {
         res.status(500).json({msg: error.message})

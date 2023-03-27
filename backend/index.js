@@ -2,6 +2,9 @@ const express = require("express")
 const signupRouter = require("./routes/signupRouter")
 const mongoose = require("mongoose")
 const session = require("express-session"); 
+const path = require('path')
+const { dirname } = require('path')
+const { fileURLToPath } = require('url');
 const mongodbSession = require("connect-mongodb-session")(session);
 const adminRouter = require("./routes/adminRouter")
 const vendorRouter = require("./routes/vendorsignup")
@@ -11,8 +14,10 @@ const vendorLogin = require("./routes/vendorlogin")
 const cartRouter = require("./routes/cart");
 const productRouter = require("./routes/products");
 const orderRouter = require("./routes/OrderRoutes");
-
+const dotenv = require('dotenv')
+dotenv.config()
 const cors = require("cors");
+
 const app = express()
  const MAX_AGE = 1000 * 60 * 60 * 2208  // 92days
 
@@ -21,6 +26,9 @@ const mongodbSessionStore = new mongodbSession({
     databaseName: "E-commerce",
     collection: "sessions"
   })
+
+
+// app.use("/upload", express.static(path.join(__dirname,'public')))
 app.use("/upload",express.static('upload'))
 app.use(cors())
   app.use(session({
@@ -64,7 +72,7 @@ const PORT = process.env.PORT || 3001
 
 const startServer = async () => {
 
-    await mongoose.connect("mongodb+srv://treyze123:Fae3FF9lFytn8VmG@cluster0.5kk0hsk.mongodb.net/E-commerce?retryWrites=true&w=majority")
+    await mongoose.connect(process.env.CLUSTER)
     app.listen(PORT, () => console.log(`Server is listening on port ${PORT}`))
 }
 startServer()

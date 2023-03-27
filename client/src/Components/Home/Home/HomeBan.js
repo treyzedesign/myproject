@@ -12,7 +12,7 @@ import "./Home.css"
 const HomeBan = ({handleClick, topDeals, editor, loader, alert, rem_modal, rem_prodModal, viewProd, item, prodBox}) => {
   const navigate = useNavigate()
 //  console.log(topDeals)
-  const deals = topDeals.map((item, index)=>{
+  const deals =  topDeals.map((item, index)=>{
     return <div class=" mt-2 mb-5" key={index}>
                  <div class="card carder">
                         <div class="card-body " onClick={()=> viewProd(item)}>
@@ -35,28 +35,27 @@ const HomeBan = ({handleClick, topDeals, editor, loader, alert, rem_modal, rem_p
   })
   const choice = editor.map((item, index)=>{
     return <div class=" mt-2 mb-5" key={index}>
-                 <div class="card carder">
-                        <div class="card-body">
-                            <div class="card-img-actions img-box">
-                                <img src={item.poster} class="card-img" width="96" height="250" alt="product image"/>
-                            </div>
-                        </div>
-                        <div class="card-body  bg-light " height="200">
-                            <div class="card-title">
-                                <h6 class="font-weight-semibold ">{item.title}</h6>
-                            </div>
-                            <span class="text-muted mr-5" data-abc="true">{item.category}</span>
-                            <span class=" font-weight-bold">&#8358;{item.price}</span>
-                            <div class="text-muted mb-3">{item.brand}</div>
-                            <button type="button" class="btn btn-outline-primary bg-cart" onClick={()=>handleClick(item)}> Add to cart</button>
-                        </div>
-                    </div>               
-                </div> 
-
+                <div class="card carder">
+                      <div class="card-body " onClick={()=> viewProd(item)}>
+                          <div class="card-img-actions img-box">
+                              <img src={item.poster} class="card-img" 
+                                alt="product image"/>
+                          </div>
+                      </div>
+                      <div class="card-body  bg-light " height="100">
+                          <div class="card-title">
+                              <h6 class="font-weight-semibold ">{item.title}</h6>
+                          </div>
+                          <span class=" font-weight-bold text-right">&#8358;{item.price}</span>
+                          <div class="text-muted mb-3">brand: {item.brand}</div>
+                          <button type="button" class="btn btn-outline-primary bg-cart" onClick={()=>handleClick(item)}> Add to cart</button>
+                      </div>
+                  </div>               
+              </div> 
   })
   return (
     <div>
-     {loader && 
+     {/* {loader && 
      <div className='load'>
         <div className='loader'></div>
      </div>
@@ -68,7 +67,7 @@ const HomeBan = ({handleClick, topDeals, editor, loader, alert, rem_modal, rem_p
        <span aria-hidden="true">&times;</span>
      </button>
     </div>
-     }
+     } */}
      {prodBox && 
        <div >
         <div className='prodModal'>
@@ -124,7 +123,7 @@ const HomeBan = ({handleClick, topDeals, editor, loader, alert, rem_modal, rem_p
         </div>
     </div>
     <div className='container-lg mt-3'>
-    <div className='col-sm-12'>
+    <div className='col-md-12'>
             <div className='row'>
                 <div className='col-sm-3'>
                     <div className='p-3'>
@@ -155,8 +154,8 @@ const HomeBan = ({handleClick, topDeals, editor, loader, alert, rem_modal, rem_p
     </div>
     </div>
         <h3 className='sub-title p-2'>Top deals</h3>
-        <div class="container-fluid d-flex flex-wrap mt-50 mb-50 ">    
-                {deals}
+        <div class="container-fluid d-flex flex-wrap mt-50 mb-50 ">
+          {deals}    
         </div>
         <h3 className='sub-title p-2'>Editor's choice</h3>
         <div class="container-fluid d-flex justify-content-center mt-50 mb-50 ">     

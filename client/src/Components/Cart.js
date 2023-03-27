@@ -4,13 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { FaTrash, FaPlus, FaMinus } from 'react-icons/fa';
 import "./Comp.css"
 const Cart = ({cart, handleChange, clearCart, price, deleteCartItem}) => {
-  
 const navigate = useNavigate()
   // handlePrice()
 
 const ship_page =()=>{
-  if(cart == null){
-    navigate('/cart')
+  if(cart.length == 0){
+    alert("cart is empty, please add item to cart")
+    
   }else{
     navigate('/shipping_page')
 

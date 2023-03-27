@@ -18,7 +18,6 @@ import About from "./Components/About";
 import Adminprod from "./Admin/pages/Adminprod";
 import AdminUser from "./Admin/pages/AdminUser";
 import { AdminOrder } from "./Admin/pages/AdminOrder";
-import AdminNote from "./Admin/pages/AdminNote";
 import ProtectedRoute from "./Components/ProtectectedRoute";
 import HomeBan from "./Components/Home/Home/HomeBan";
 import Cart from "./Components/Cart";
@@ -37,6 +36,8 @@ import MyOrder from "./User/Pages/MyOrder";
 import Searched from "./Components/Searched";
 import ForgotPass from "./Components/ForgotPass";
 import ChangePassword from "./Components/ChangePassword";
+import Password from "./User/Pages/Password";
+import AdminPost from "./Admin/pages/AdminPost";
 
 const getItemsFromLocalStorage = () => {
 const result = localStorage.getItem("cart")
@@ -80,13 +81,13 @@ function App() {
       setEditor(editors)
       setLoader(false)
      } catch (error) {
-      setLoader(false)
+      setLoader(true)
      }
      
    }
-  //  useEffect(() => {
-          
-  //  }, [])
+   useEffect(() => {
+    fetchProducts(td_url, ed_url)   
+   }, [])
 
   const handleClick = (item)=>{
     // setalert(true)
@@ -134,7 +135,8 @@ function App() {
     
   }, [cart])
 
-  // Cart functions
+  // CART FUNCTIONS
+  
   const handleChange = (item, d) => {
     const ind = cart.indexOf(item);
     const arr = cart;
@@ -183,8 +185,7 @@ function App() {
   
 
   
-// for the Admin
-
+// SOME FUNCTIONS FOR THE ADMIN
   const del_prod = async(item)=>{
     const id = item.id
     const name = item.title
@@ -237,26 +238,18 @@ function App() {
     })
   }   
 }
-//  const [username, setUsername] = useState()
-//  const getdata = (data)=>{
-//     console.log("coming from", data)
-//     setUsername(data)
-//  }
 
-
-
-// UserDashboard
+// SOME FUNCTIONS FOR THE USER DASHBOARD
+ 
 let cookie = Cookies.get("UserLoginToken")
 let store = JSON.parse(localStorage.getItem("userAddress"))
 const fetchUsers = async()=>{
   if (!cookie){
       console.log("bad");
   }else{
-       
       let decoder = jwt_decode(cookie)
-      // console.log(decoder.id);
+      // fetch user data
       await axios.get(`http://localhost:3001/api/v1/signup/${decoder.id}`).then((feedback)=>{
-        // console.log(feedback);
         if (store == null){
           let userAddressBook = {
             firstname : feedback.data[0].firstName,
@@ -269,9 +262,7 @@ const fetchUsers = async()=>{
           }
           localStorage.setItem("userAddress", JSON.stringify(userAddressBook))
         }
-       
         setfname(feedback.data[0].firstName)
-        // console.log(fname);
         setlname(feedback.data[0].lastName)
         setemail(feedback.data[0].email)
         setadd(feedback.data[0].address)
@@ -282,20 +273,17 @@ const fetchUsers = async()=>{
       }).catch((fail)=>{
         console.log(fail);
       })
+
+      // fetch user Orders
        await axios.get(`http://localhost:3001/api/v1/order/${decoder.id}?sort=desc`).then((feedback)=>{
-        // console.log(feedback);
         setOrders(feedback.data)
       }).catch((fail)=>{
         console.log(fail);
       })
     }
   }
-  // console.log(Order);
-  
-  
-  
 useEffect(()=>{
-  fetchProducts(td_url, ed_url) 
+  
    fetchUsers()
    
 },[])
@@ -309,7 +297,7 @@ useEffect(()=>{
            <Route path="/admin/products" element={<Adminprod del_prod = {del_prod}/>}/>
            <Route path="/admin/users" element={<AdminUser del_prod={del_prod}/>}/>
            <Route path="/admin/orders" element={<AdminOrder del_order={del_order} del_all_order={del_all_order}/>}/>
-           <Route path="/admin/notifications" element={<AdminNote/>}/>
+           <Route path="/admin/post-product" element={<AdminPost/>}/>
         </Route>
         <Route path="/admin-register" element={<AdminReg/>}></Route>
         <Route path="/admin-login" element={<AdminForm/>}></Route>
@@ -323,6 +311,7 @@ useEffect(()=>{
               fname={fname} lname={lname} address={add} email={email} state={state} country={country} id={id}
              />}/>
              <Route path="/user/user_orders" element={<MyOrder id={id} Order={Order}/>}/>
+             <Route path="/user/change-user-password" element={<Password id={id}/>}/>
         </Route>
         <Route path="/register" element={<UserReg/>}></Route>
         <Route path="/login" element={<LogUser />}></Route>
@@ -334,7 +323,7 @@ useEffect(()=>{
         {/* users */}
           <Route path='/' element={<SharedLayout size={cart.length} name={Username} finderbtn={finderbtn}/>}>
           <Route index element={<HomeBan
-                  handleClick={handleClick}
+                handleClick={handleClick}
                 topDeals={topDeals}
                 editor={editor}
                 loader={loader}

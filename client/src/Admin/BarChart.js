@@ -21,21 +21,16 @@ const BarChart = ({chart}) => {
         // }),
         labels: [],
         datasets: [{
-            label: `orders`,
+            label: `MONTHLY INCOME`,
             data: chart.reduce((acc,item) => { 
-                
                     let date = item.createdAt.slice(6,7)
                     let m = month[date] + " " + d.getFullYear()
-                
                     if(acc[m]){
                         acc[m] += item.amount
                     }else{
                         acc[m] = item.amount
-                    }
-
-                    
+                    } 
                     return acc  
-
                 },{} ),
             backgroundColor: [
                 'rgba(255, 99, 132)',
@@ -78,20 +73,17 @@ const BarChart = ({chart}) => {
     };
   return (
     <div>
-        <Bar
-            height={100}
-            
-            data = {data}
-            options={options}
-        />
+        <div className='text-center p-3'><h3><b>MONTHLY INCOME</b></h3></div>
+        <div class="chart-container" style={{position: "relative", height: "60vh", width: "80%"}}>
+            <Bar
+                // height={100}
+                data = {data}
+                options={options}
+            />
+        </div>
     </div>
   )
 }
 
 export default BarChart
 
-// chart.map(item => {
-//     let month = ["", "jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"]
-//      let m =item.createdAt.slice(6,7)
-//      let ok = month[m] + ' ' + m
-//     return ok})

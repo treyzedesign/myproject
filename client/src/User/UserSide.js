@@ -1,5 +1,5 @@
 import React from 'react'
-import { FaEdit, FaParachuteBox, FaUserAstronaut, FaUserEdit } from 'react-icons/fa'
+import { FaEdit, FaParachuteBox, FaPassport, FaPhone, FaUserAstronaut, FaUserEdit, FaShieldAlt } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import "./user.css"
 const UserSide = () => {
@@ -20,9 +20,14 @@ const UserSide = () => {
           <h6><FaParachuteBox/> orders</h6>
         </div>
       </Link>
-      <Link to=""  className='text-decoration-none side-link'>
+      <Link to="/user/change-user-password"  className='text-decoration-none side-link'>
         <div>
-          <h6>Update Account</h6>
+          <h6><FaShieldAlt/> change password</h6>
+        </div>
+      </Link>
+      <Link to="/contact-us"  className='text-decoration-none side-link'>
+        <div>
+          <h6><FaPhone/> Contact Us</h6>
         </div>
       </Link>
     </div>

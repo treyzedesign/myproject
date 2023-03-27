@@ -8,6 +8,8 @@ const jwt = require('jsonwebtoken')
 const signupRouter = Router()
 const dotenv = require("dotenv")
 const UserAuth = require("../utils/UserAuth")
+const Verify = require("../utils/Auth")
+
 dotenv.config()
 
 // add users
@@ -56,7 +58,7 @@ try {
             password: signupHashPass
         }   
         if(newUser){
-            const emailToken = jwt.sign({email: email}, 'jesuswillforeverbethemosthighnomatterwhat')
+            const emailToken = jwt.sign({email: email}, process.env.EMAIL_SECRET)
             const onlyToken ={
                 token :  emailToken,
                 id: user_id,
@@ -74,7 +76,7 @@ try {
                 console.log("success");
             }
             let save = await User.create(newUser)
-                       await Token.create(onlyToken)
+                    //    await Token.create(onlyToken)
             if(save){
                 console.log(save);
                 res.status(200).json({
@@ -90,7 +92,6 @@ try {
 })
 
 //forgot Password
-
 signupRouter.post("/signup/password", async(req,res)=>{
     const {email} = req.body
     try {
@@ -124,8 +125,55 @@ signupRouter.post("/signup/password", async(req,res)=>{
     }
 })
 
-// change password
+// send user a mail 
+signupRouter.post("/signup/send-message", Verify, async(req,res)=>{
+    const {email, name, subject, body} = req.body
+    try {
+        let info = await transporter.sendMail({
+            from : process.env.USER,
+            to: email,
+            subject : `${subject}`,
+            html: `<body>
+                        <div>
+                            <p>hello ${name}, </p>
+                            <div> ${body}</div>
+                        </div>
+                    </body>`
+        }).then((feedback)=>{
+            res.status(200).json({data: feedback, msg: "success"})
+        }).catch((fail)=>{
+            res.send(fail)
+        })
+    } catch (error) {
+        res.status(500).json({
+            mgs: error
+        })
+    }
+})
 
+// check for password 
+signupRouter.post('/signup/checkpassword/:id', UserAuth, async(req,res)=>{
+    const {password} = req.body
+    const id = req.params.id
+    let finder = await User.findOne({id : id})
+    console.log(finder);
+    try {
+        if(finder){
+            const cur_pass = finder.password
+            console.log(cur_pass);
+            const compare = await bcrypt.compare(password, cur_pass)
+            if(compare){
+                res.status(200).json({msg: 'matches'})
+            }else{
+                res.status(401).json({msg: "no match"})
+            }
+        }
+    } catch (error) {
+        res.status(500).json({msg: error})
+    }  
+})
+
+// change password
 signupRouter.patch('/signup/changePassword', async (req, res)=>{
     const {id, password} = req.body
             const hasher = await bcrypt.hash(password, 10)
@@ -151,7 +199,7 @@ signupRouter.post("/verifyEmail", async(req, res)=>{
     // console.log(real_token);
         try {
             if(userEmail){
-                const decode = jwt.verify(usertoken.token, 'jesuswillforeverbethemosthighnomatterwhat', async(err, decode)=>{
+                const decode = jwt.verify(usertoken.token, process.env.EMAIL_SECRET, async(err, decode)=>{
                     if(err){
                         console.log("expired")
                         res.json({

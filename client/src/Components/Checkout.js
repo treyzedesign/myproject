@@ -32,12 +32,7 @@ const Checkout = ({cart, price, id}) => {
   // const countryref = useRef(null)
 
   
-  const config = {
-    reference: 'ref' + Math.floor(123456789 + Math.random() * 999999999),
-    email: checkStore.email,
-    amount: est * 100, //Amount is in the country's lowest currency. E.g Kobo, so 20000 kobo = N200
-    publicKey: 'pk_test_17bcdae32614d8cdb649c35a2fdbaf51b6b81b64',
-  };
+ 
 
   const editinfo = ()=>{
     // if(firstname.length > 0 && lastName.length > 0 && email.length > 0 && address.length > 0 && state.length > 0 
@@ -61,8 +56,15 @@ const Checkout = ({cart, price, id}) => {
       seteditAddress(false)
   // }
   }
-
   
+
+  // PAYSTACK PAYMENT
+  const config = {
+    reference: 'ref' + Math.floor(123456789 + Math.random() * 999999999),
+    email: checkStore.email,
+    amount: est * 100, //Amount is in the country's lowest currency. E.g Kobo, so 20000 kobo = N200
+    publicKey: 'pk_test_17bcdae32614d8cdb649c35a2fdbaf51b6b81b64',
+  };
   const handlePaystackSuccessAction =  (reference) => {
     console.log(reference);
     const userdetails = {
@@ -84,9 +86,9 @@ const Checkout = ({cart, price, id}) => {
       address : checkStore.address,
       state: checkStore.state,
       payment: "online"
-  }
-  // console.log(userdetails);
-  if(userdetails){
+    }
+    // console.log(userdetails);
+    if(userdetails){
    axios.post('http://localhost:3001/api/v1/order', userdetails, {
       headers:{ "usertoken" : Cookie}
     }).then((feedback)=>{
@@ -94,7 +96,7 @@ const Checkout = ({cart, price, id}) => {
     }).catch((fail)=>{
       console.log(fail);
     })
-  }
+    }
   };
  const handlePaystackCloseAction = () => {
     console.log('closed')
@@ -105,6 +107,8 @@ const Checkout = ({cart, price, id}) => {
       onSuccess: (reference) => handlePaystackSuccessAction(reference),
       onClose: handlePaystackCloseAction,
   }; 
+
+  
   const cartItem = cart.map((item, index)=>{
     return <div  key={index}>
         <div className='check_prod'>

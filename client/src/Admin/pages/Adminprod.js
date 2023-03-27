@@ -1,20 +1,16 @@
 import React from 'react'
 import "../admin.css"
 import axios from 'axios'
-import { useRef, useState, useEffect } from 'react'
-import Cookies from 'js-cookie'
+import { useState, useEffect } from 'react'
+import { FaBoxOpen, FaTrash } from 'react-icons/fa';
 
 const Adminprod = ({del_prod}) => {
-  const [title, setTitle] = useState()
-  const [desc, setDesc] = useState()
-  const [spec, setSpec] = useState()
-  const [brand, setBrand] = useState()
-  const [price, setPrice] = useState()
-  const [category, setCat] = useState()
-  const [season, setSeason] = useState()
-  const [poster, setPoster] = useState()
+  
   const [prod, setProd] = useState([]);
- 
+  const [filter, setfilter] = useState("")
+  const [details, setDetails]= useState(false)
+  const [dItem, setdItem] = useState([])
+
   
   const product_url = `http://localhost:3001/api/v1/products`
   const fetchProducts = async (product_url)=>{
@@ -28,8 +24,20 @@ const Adminprod = ({del_prod}) => {
   useEffect(()=>{
     fetchProducts(product_url);
   }, [])
+  
+  const productInfo = (item)=>{
+    setDetails(true)
+    
+    setdItem(item)
+  
+  }
+  const life = String(filter)
 
-  const products = prod.map((item, index)=>{
+  const products = prod.filter(item => item.id.includes(life) ||
+                                       item.title.includes(life) ||
+                                       item.brand.includes(life) ||
+                                       item.category.trim().includes(life)
+  ).map((item, index)=>{
      return <div class="row">
      <div class="col-md-12">
      <div class="table-wrap">
@@ -43,6 +51,7 @@ const Adminprod = ({del_prod}) => {
      <th>price</th>
      <th>category</th>
      <th></th>
+     <th></th>
      </tr>
      </thead>
      <tbody>
@@ -53,7 +62,8 @@ const Adminprod = ({del_prod}) => {
      <td>{item.brand}</td>
      <td>{item.price}</td>
      <td>{item.category}</td>
-     <td><button className='btn btn-primary' onClick={()=>del_prod(item)}>Delete</button></td>
+     <td><FaBoxOpen className='order_btn' onClick={()=> productInfo(item)}/></td>
+     <td><FaTrash className='order_btn' onClick={()=>del_prod(item)} /></td>
      </tr>
      </tbody>
      </table>
@@ -61,105 +71,67 @@ const Adminprod = ({del_prod}) => {
      </div>
      </div>
   })
+  // onClick={()=> productInfo(item)}
+  // onClick={()=> del_order(item)}
   
-  const postprod = (e)=>{
-    e.preventDefault()
-      const token = Cookies.get('AccessToken')
-      const form = new FormData();
-
-      form.append('title', title)
-      form.append('description', desc)
-      form.append('spec', spec)
-      form.append('brand', brand)
-      form.append('price', price)
-      form.append('category', category)
-      form.append('season', season)
-      form.append('image', poster)
-
-      axios.post(`http://localhost:3001/api/v1/products`, form, {
-        headers: {
-          "token" : token
-        }
-      }).then((feedback)=>{
-        console.log(feedback)
-      }).catch((fault)=>{
-        console.log(fault);
-      })
-  }
- 
   return (
     <div className='product m-auto'>
-      <div className='prod-box m-auto'>
-        <form method='post' onSubmit={postprod} encType='multipart/form-data'>
-          <h1 className='p-h1'>POST PRODUCTS</h1>
-          <div className='form-group'>
-            <label>title</label><br/>
-            <input type="text" onChange={(e)=>{setTitle(e.target.value)}} value={title} className='form-control' />
+       {details && 
+        <div className='detail-box '>
+            <div className='prod-detailbox' style={{height:"100vh",left:"20vw", width:"60vw"}}>
+            <button type="button" class="close det-close" onClick={()=> setDetails(false)}>
+              <span aria-hidden="true">&times;</span>
+            </button>
+              <div>
+                  <h4>product details</h4>
+                  <hr/>
+                  <div className='d-each-box'>
+                      <div>
+                          <strong>title :</strong> {dItem.title}
+                      </div>
+                      <div>
+                          <strong>brand :</strong> <span>{dItem.brand}</span>
+                      </div>
+                      <div>
+                          <strong>price :</strong> <span> &#8358; {dItem.price}</span>
+                      </div>
+                      <div>
+                          <strong>category :</strong> <span>{dItem.category}</span>
+                      </div>
+                  </div>
+                  <h6 className="pt-3">Description </h6>
+                  <div className='d-each-box'>
+                      <div>{dItem.description}</div>
+                  </div>
+                  <h6 className="pt-3">Specifications </h6>
+                  <div className='d-each-box'>
+                      <div>{dItem.spec}</div>
+                  </div>
+              </div>
+            </div>
           </div>
-          <div className='form-group'>
-            <label>description</label><br/>
-            <textarea cols="60" onChange={(e)=>{setDesc(e.target.value)}} value={desc} rows="5"></textarea>
-          </div>
-          <div className='form-group'>
-            <label>spec</label><br/>
-            <textarea cols="60" onChange={(e)=>{setSpec(e.target.value)}} value={spec} rows="5"></textarea>
-          </div>
-          <div className='d-flex'>
-          <div className='form-group'>
-            <label>brand</label><br/>
-            <input type="text" onChange={(e)=>{setBrand(e.target.value)}} value={brand} className='form-control' />
-          </div>
-          <div className='form-group ml-5'>
-            <label>price</label><br/>
-            <input type="text" onChange={(e)=>{setPrice(e.target.value)}} value={price} className='form-control' />
-          </div>
-          </div>
-          <div >
-          <div className='form-group'>
-            <label>category</label><br/>
-            <select onChange={(e)=>{setCat(e.target.value)}} value={category} className='browser-default custom-select px-2'>
-              <option disabled selected></option>
-              <option > phones&tablet</option>
-              <option > computer</option>
-              <option > Home</option>
-              <option > male-fashion</option>
-              <option > female-fashion</option>
-            </select>
-          </div>
-          <div className='form-group'>
-            <label>season</label><br/>
-            <select onChange={(e)=>{setSeason(e.target.value)}} value={season} className='browser-default custom-select '>
-              <option disabled selected></option>
-              <option > Topdeals</option>
-              <option > Bonanza</option>
-              <option > Editor</option>
-            </select>
-          </div>
-          </div> 
-          <div className='form-group'>
-            <label>image file</label><br/>
-            <input type="file"  onChange={(e) => {
-              const file = e.target.files[0]
-              setPoster(file) 
-            }} className='form-control' />
-          </div>
-           {/* <div className='form-group ml-5'>
-            <label>image</label><br/>
-            <input type="text" ref={imageRef} className='form-control' />
-          </div> */}
-          <div>
-            <button type='submit'  className="btn btn-warning"> post product</button>
-          </div>
-        </form>
-      </div>
-      <section class="ftco-section">
+        }
+        <section class="ftco-section product">
         <div class="container table-cont">
           <div class="row justify-content-center">
             <div class="col-md-6 text-center mb-5">
-              <h2 class="heading-section bg-secondary">Product Table</h2>
+              <h2 class="heading-section bg-secondary mt-5">Products Table</h2>
             </div>
           </div>
-          {products}
+          <div className='mb-5'> 
+            <div className='col-12'>
+              <div className='row'>
+                <div className='col-9'>
+                <h5>filter</h5>
+                 <input placeholder='by product_Id , title, brand, category' className='form-control shadow-lg' onChange={(e)=>{setfilter(e.target.value)}}/> 
+                </div>
+                <div className='col-3 text-right mt-1'>
+                <button className='btn btn-danger mt-4'>delete table</button>
+                </div>
+              </div>
+            </div>    
+          </div>
+           {products}
         </div>
       </section>
     </div>

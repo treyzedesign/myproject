@@ -32,19 +32,18 @@ const LogUser = (props) => {
                 Cookie.set("UserLoginToken", feedback.data.data , {expires: 7, secure: false, path: "/", sameSite: true})
                 navigate("/")
                 setLoader(false)
-                
-                // setdata(feedback.data.data.Name)
-                // props.onClick(feedback.data.data.Name)
-              
                 window.location.reload("/")
             
             }).catch((fail)=>{
                 console.log(fail)
                 setLoader(false)
+                setErr(fail.response.data.message)
+                setInputerr(false)
             })
         }else{
             setLoader(false)
             setInputerr(true)
+            
         }
     }
   return (
@@ -59,8 +58,10 @@ const LogUser = (props) => {
     <div className='user-formlog  px-5 py-3 shadow-lg'>
               <form className="form-signin">
                 <h1 className="h3 mb-3 font-weight-normal text-center">Please sign in</h1>
-                {inputerr && <h4>input credentials</h4>}
-                {err }
+                <div className="text-center">
+                    {inputerr && <small className="p-2 text-danger">please input your credentials</small>}
+                    <small className="p-2 text-danger">{err}</small>
+                </div>
                 <label className="sr-only">Email address</label>
                 <input type="email" id="inputEmail" className="form-control" ref={emailRef} placeholder="Email address" required />
                 <label  className="sr-only">Password</label>

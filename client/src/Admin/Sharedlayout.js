@@ -9,11 +9,12 @@ const Sharedlayout = () => {
     <div>
         <AdminNav/>
         <div className='d-flex'>
-            <AdminSide/>
-            <div className='outlet'>
+           <div>
+           <AdminSide/>
+           </div>
+           <div className='outlet'>
             <Outlet/>
-            </div>
-          
+           </div>
         </div>
     </div>
   )

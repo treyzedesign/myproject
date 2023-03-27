@@ -9,7 +9,7 @@ const Verify = async(req, res, next)=>{
     const admintoken = await AdminToken.find({authHeader})
     if(admintoken){
         // console.log(admintoken);
-        jwt.verify(authHeader, 'ivealwaystriedmybesttomakemymamaandfamilyproudofmebytryingeverythingpossibletomakeitinlifeinGodiwilltrust'
+        jwt.verify(authHeader, process.env.TOKEN_SECRET_KEY
         , (err, decode)=>{
             if(err){
                 res.status(403).json({
