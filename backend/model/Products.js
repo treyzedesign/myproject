@@ -7,12 +7,12 @@ const productschema = new mongoose.Schema({
     spec: {type: String, require: true},
     brand: {type: String, require: true},
     price: {type: String, require: true},
-    category: {type: String, require: true},
+    category: {type: String, require: true, ref: 'Category'},
     poster : {type: String, require: true},
     date : {type: String, require: true},
     season: {type: String, require: true}
     
-})
+},{timestamps: true})
 
 const Products = mongoose.model("Products", productschema)
 

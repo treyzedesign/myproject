@@ -4,37 +4,48 @@ import { useParams } from 'react-router-dom'
 import { useState, useRef} from 'react'
 import Cookies from 'js-cookie'
 
-const UserEdit = ({fname, lname, address, email, state, country, id}) => {
+const UserEdit = ({fname, lname, address, email, state, country, id, tel}) => {
     const firstref = useRef(null)
     const lastref = useRef(null)
-    const emailref = useRef(null)
     const addressref = useRef(null)
     const stateref = useRef(null)
     const countryref = useRef(null)
-      
-    const update = async()=>{
+    const telref = useRef(null)
+    console.log(id);
+    const update = async(usermail)=>{
       const cookie = Cookies.get("UserLoginToken")
-      const firstName = firstref.current.value
-      const lastName = lastref.current.value
-      const email = emailref.current.value
+
       const address = addressref.current.value
       const state = stateref.current.value
       const country = countryref.current.value
-      if(firstName.length > 0 && lastName.length > 0 && email.length > 0 && address.length > 0 && state.length > 0 
-        && country.length > 0 ){
+      const tel_phone = telref.current.value
+      if( address.length > 0 || state.length > 0 || country.length > 0 || tel_phone > 0){
       await axios.patch(`http://localhost:3001/api/v1/signup/${id}`, {
-        firstName, lastName, email, address, state, country
+       address, state, country, tel_phone
       }, {headers: {
         "usertoken" : cookie
       }}).then((feedback)=>{
         console.log(feedback);
+        let userAddressBook = {
+          firstname : fname,
+          lastName : lname,
+          email : email,
+          tel : tel_phone,
+          address : address,
+          state : state,
+          country : country
+        }
+        localStorage.setItem("userAddress", JSON.stringify(userAddressBook))
         window.location.reload()
       }).catch((fail)=>{
         console.log(fail);
       })
+
+      
     }else{
       console.log("enter your new information");
     }
+
     }
   return (
     <div>
@@ -42,16 +53,12 @@ const UserEdit = ({fname, lname, address, email, state, country, id}) => {
             <h3 className='text-center'>Edit Profile</h3>
         </div>
         <div className='w-50 m-auto mt-5'>
-        <label for="inputfirstname" className="sr-only">firstName</label> 
-                <input type="text" id="" className="form-control mt-2" ref={firstref} placeholder={fname} required/>
-                <label className="sr-only">lastName</label>
-                <input type="text"  className="form-control mt-2" ref={lastref} placeholder={lname} required/>
-                <label className="sr-only">email</label>
-                <input type="email"  className="form-control mt-2" ref={emailref} value={email} required/>
                 <label className="sr-only">Address</label>
-                <input type="text"  className="form-control mt-2" ref={addressref}  placeholder={address} required/>
+                <input type="text"  className="form-control mt-2" ref={addressref}  placeholder={address ? address : "enter address"} required/>
+                <label className="sr-only">Phone No.</label>
+                <input type="text"  className="form-control mt-2" ref={telref}  placeholder={tel ? tel : "enter phone number"} required/>
                 <select className="browser-default mt-2 custom-select" ref={stateref} >
-                  <option disabled selected>{state}</option>
+                  <option disabled selected>{state ? state : "enter your state"}</option>
                   <option value="Abia">Abia</option>
                   <option value="Adamawa">Adamawa</option>
                   <option value="Akwa Ibom">Akwa Ibom</option>
@@ -91,13 +98,13 @@ const UserEdit = ({fname, lname, address, email, state, country, id}) => {
                   <option value="Zamfara">Zamfara</option>
                 </select>
                 <select className="browser-default mt-2 custom-select" ref={countryref} >
-                  <option disabled selected>{country}</option>
+                  <option disabled selected>{country ? country : "enter your country"}</option>
                   <option value="Nigeria">Nigeria</option>
                   <option value="Benin republic">Benin Rep.</option>
                   <option value="Togo">Togo</option>
                 </select>
                 <div>
-                    <button className='btn btn-warning my-3 px-5' onClick={()=> update()}>Update</button>
+                    <button className='btn btn-warning my-3 px-5' onClick={()=> update(email)}>Update</button>
                 </div>
         </div>
     </div>

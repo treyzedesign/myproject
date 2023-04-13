@@ -22,16 +22,16 @@ const Userdash = ({fname, lname, email, address, state, country, tel}) => {
             <span className='font-weight-bolder'>E-mail: </span> {email}
           </div>
           <div className='ac-info p-3'>
-            <span className='font-weight-bolder'>Phone No.:</span> {tel}
+            <span className='font-weight-bolder'>Phone No.:</span> {tel ? tel : "N/A (edit your Profile)"}
           </div>
           <div className='ac-info p-3'>
-            <span className='font-weight-bolder'>Address: </span> {address}
+            <span className='font-weight-bolder'>Address: </span> {address  ? address : "N/A (edit your Profile)"}
           </div>
           <div className='ac-info p-3'>
-            <span className='font-weight-bolder'>State: </span> {state}
+            <span className='font-weight-bolder'>State: </span> {state  ? state : "N/A (edit your Profile)"}
           </div>
           <div className='ac-info p-3'>
-            <span className='font-weight-bolder'>Country: </span> {country}
+            <span className='font-weight-bolder'>Country: </span> {country  ? country : "N/A (edit your Profile)"}
           </div>
           <div className='ac-info p-3'>
             <span className='font-weight-bolder'>Status: </span> Verified <FaCheckCircle className='verify-check'/>

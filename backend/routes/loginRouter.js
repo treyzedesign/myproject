@@ -26,7 +26,9 @@ loginRouter.post("/login", async(req, res)=>{
                     Accesstoken : jwt.sign({
                         id: feedback.id,
                         email: email,
-                        Name: feedback.firstName}, process.env.TOKEN_SECRET, {expiresIn: "7d"})
+                        Name: feedback.firstName,
+                        isAdmin: feedback.isAdmin,
+                        superAdmin: feedback.superAdmin}, process.env.TOKEN_SECRET, {expiresIn: "7d"})
                 }
                 const userVerified = feedback.verified
                 if(userVerified){

@@ -1,11 +1,11 @@
 import React from 'react'
 import "../admin.css"
 import axios from 'axios'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Cookies from 'js-cookie'
 
 const AdminPost = () => {
-
+  const [topping, setTopping] = useState('first')
   const [title, setTitle] = useState([])
   const [desc, setDesc] = useState([])
   const [spec, setSpec] = useState([])
@@ -14,6 +14,11 @@ const AdminPost = () => {
   const [category, setCat] = useState([])
   const [season, setSeason] = useState([])
   const [poster, setPoster] = useState([])
+  const [cat, setcategory] = useState([])
+  const categoryId = (name)=>{
+    setCat(name)
+  }
+  console.log(category);//
 
   const postprod = (e)=>{
     e.preventDefault()
@@ -39,6 +44,17 @@ const AdminPost = () => {
         console.log(fault);
       })
   }
+  const fetchcategory = async()=>{
+    await axios.get(`http://localhost:3001/api/v1/category`).then((feedback)=>{
+      console.log(feedback.data.msg);
+      setcategory(feedback.data.msg)
+    }).catch((error)=>{
+      console.log(error.message);
+    })
+  }
+  useEffect(() => {
+    fetchcategory()
+  }, []);
   return (
     <div style={{marginTop:"10vh"}}>
          <div className='prod-box m-auto'>
@@ -68,15 +84,17 @@ const AdminPost = () => {
           </div>
           <div >
           <div className='form-group'>
-            <label>category</label><br/>
-            <select onChange={(e)=>{setCat(e.target.value)}} value={category} className='browser-default shadow-lg custom-select px-2'>
-              <option disabled selected></option>
-              <option > phones&tablet</option>
-              <option > computer</option>
-              <option > Home</option>
-              <option > male-fashion</option>
-              <option > female-fashion</option>
-            </select>
+            <div><h5>category</h5></div>
+            {
+              cat.map((item)=>{
+                return (
+                    <span className='pl-2'>
+                    <input type='button' onClick={()=> categoryId(item.category_name)}  className='btn btn-outline-success m-1 cat-butt' name={item.category_name} value={item.category_name}/>
+                    </span>
+                    
+                )
+              })
+            }
           </div>
           <div className='form-group'>
             <label>season</label><br/>

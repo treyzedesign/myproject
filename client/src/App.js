@@ -2,10 +2,8 @@ import { FaShoppingBag} from "../node_modules/react-icons/fa"
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import '../node_modules/bootstrap/dist/js/bootstrap.min.js';
 import './App.css';
-import Home from './Components/Home/Home';
 import AdminForm from './Admin/AdminForm'
 import AdminReg from "./Admin/AdminReg";
-import HomeNav from "./Components/Home/Home/HomeNav";
 import Admin from "./Admin/Admin"
 import SharedLayout from "./Components/SharedLayout";
 import Sharedlayout from "./Admin/Sharedlayout";
@@ -31,13 +29,14 @@ import Cookies from "js-cookie";
 import UserEdit from "./User/Pages/UserEdit";
 import Checkout from "./Components/Checkout";
 import SecureRoute from "./User/SecureRoute";
-import { checkRoute } from "./User/SecureRoute";
 import MyOrder from "./User/Pages/MyOrder";
 import Searched from "./Components/Searched";
 import ForgotPass from "./Components/ForgotPass";
 import ChangePassword from "./Components/ChangePassword";
 import Password from "./User/Pages/Password";
 import AdminPost from "./Admin/pages/AdminPost";
+import AdminSettings from "./Admin/pages/AdminSettings";
+import NotFound from "./Components/NotFound";
 
 const getItemsFromLocalStorage = () => {
 const result = localStorage.getItem("cart")
@@ -208,13 +207,13 @@ function App() {
 
  const del_order = async(item)=>{
   const refId = item.refId
-  const token = Cookie.get('AccessToken')
+  const token = Cookie.get('UserLoginToken')
   const accept = window.confirm("are you sure you want to delete this order")
   if(accept){
     window.location.reload()
     const del = await axios.delete(`http://localhost:3001/api/v1/order/${refId}`,{
       headers: {
-       "token" : token
+       "usertoken" : token
      }
     }).then((feedback)=>{
       console.log(feedback);
@@ -225,13 +224,13 @@ function App() {
  }
 
  const del_all_order = async ()=>{
-  const token = Cookie.get('AccessToken')
+  const token = Cookie.get('UserLoginToken')
   let accept = window.confirm("do you wish to proceed")
   if(accept){
     window.location.reload()
     await axios.delete("http://localhost:3001/api/v1/order/", {
        headers: {
-      "token" : token
+      "usertoken" : token
        }
       }).then((feedback)=>{
       console.log(feedback);
@@ -298,6 +297,7 @@ useEffect(()=>{
            <Route path="/admin/users" element={<AdminUser del_prod={del_prod}/>}/>
            <Route path="/admin/orders" element={<AdminOrder del_order={del_order} del_all_order={del_all_order}/>}/>
            <Route path="/admin/post-product" element={<AdminPost/>}/>
+           <Route path="/admin/settings" element={<AdminSettings/>}/>
         </Route>
         <Route path="/admin-register" element={<AdminReg/>}></Route>
         <Route path="/admin-login" element={<AdminForm/>}></Route>
@@ -308,14 +308,14 @@ useEffect(()=>{
               fname={fname} lname={lname} address={add} email={email} state={state} country={country} tel={tel}
              />}/>
              <Route path="/user/profile/update_account" element={<UserEdit
-              fname={fname} lname={lname} address={add} email={email} state={state} country={country} id={id}
+              fname={fname} lname={lname} address={add} email={email} state={state} country={country} id={id} tel={tel}
              />}/>
              <Route path="/user/user_orders" element={<MyOrder id={id} Order={Order}/>}/>
              <Route path="/user/change-user-password" element={<Password id={id}/>}/>
         </Route>
         <Route path="/register" element={<UserReg/>}></Route>
         <Route path="/login" element={<LogUser />}></Route>
-
+        <Route path="*" element={<NotFound/>}/>
 
         <Route path="/user/verify/:email/:token" element={<EmailVerify/>}></Route>
         <Route path="/user/password/forgotPass" element={<ForgotPass/>}></Route>

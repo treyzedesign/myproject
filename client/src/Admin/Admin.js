@@ -19,7 +19,7 @@ const Admin = () => {
   
   const url = `http://localhost:3001/api/v1/signup/total`
   const url2 =`http://localhost:3001/api/v1/products/total`
-  const url3 ='http://localhost:3001/api/v1/order/'
+  const url3 ='http://localhost:3001/api/v1/allorder/'
   const fetchUsers = async(url, url2, url3)=>{
     const alluser = await axios.get(url).then((feedback)=>{
       let data = feedback.data.data
@@ -38,7 +38,7 @@ const Admin = () => {
       setchart(feedback.data)
     })
   }
-  
+  console.log(chart);
 
   useEffect(()=>{
     fetchUsers(url, url2, url3)

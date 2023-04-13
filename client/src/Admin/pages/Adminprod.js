@@ -10,7 +10,8 @@ const Adminprod = ({del_prod}) => {
   const [filter, setfilter] = useState("")
   const [details, setDetails]= useState(false)
   const [dItem, setdItem] = useState([])
-
+  const [Page, setPage] = useState(1);
+  
   
   const product_url = `http://localhost:3001/api/v1/products`
   const fetchProducts = async (product_url)=>{
@@ -23,7 +24,7 @@ const Adminprod = ({del_prod}) => {
   }
   useEffect(()=>{
     fetchProducts(product_url);
-  }, [])
+  }, [del_prod])
   
   const productInfo = (item)=>{
     setDetails(true)
@@ -38,24 +39,8 @@ const Adminprod = ({del_prod}) => {
                                        item.brand.includes(life) ||
                                        item.category.trim().includes(life)
   ).map((item, index)=>{
-     return <div class="row">
-     <div class="col-md-12">
-     <div class="table-wrap">
-     <table class="table text-center">
-     <thead class="thead-primary">
-     <tr key={index} className="text-black bg-secondary">
-     <th>#</th>
-     <th>Id</th>
-     <th>title</th>
-     <th>Brand</th>
-     <th>price</th>
-     <th>category</th>
-     <th></th>
-     <th></th>
-     </tr>
-     </thead>
-     <tbody>
-     <tr>
+     return  <tbody>
+     <tr className='t-row' key={index}>
      <td>{index + 1}</td>
      <td>{item.id}</td>
      <td>{item.title}</td>
@@ -66,14 +51,14 @@ const Adminprod = ({del_prod}) => {
      <td><FaTrash className='order_btn' onClick={()=>del_prod(item)} /></td>
      </tr>
      </tbody>
-     </table>
-     </div>
-     </div>
-     </div>
-  })
+  }).slice(Page * 10 - 10, Page * 10)
   // onClick={()=> productInfo(item)}
   // onClick={()=> del_order(item)}
-  
+  const selectPageHandler = (selectedPage)=>{
+    if (selectedPage >= 1 && selectedPage <= products.length / 10 || selectedPage >= products.length / 10  && selectedPage !== Page && Math.ceil(products.length/10) >  Page) {
+      setPage(selectedPage)
+    }
+  }
   return (
     <div className='product m-auto'>
        {details && 
@@ -131,8 +116,47 @@ const Adminprod = ({del_prod}) => {
               </div>
             </div>    
           </div>
+          <div class="row">
+          <div class="col-md-12 shadow-lg pt-4 rounded-lg">
+          <div class="table-wrap">
+          <table class="table text-center table-borderless">
+          <thead class="thead-primary">
+          <tr className="text-black bg-secondary">
+          <th>#</th>
+          <th>Id</th>
+          <th>title</th>
+          <th>Brand</th>
+          <th>price</th>
+          <th>category</th>
+          <th></th>
+          <th></th>
+          </tr>
+          </thead>
            {products}
+           </table>
+          </div>
+          </div>
+          </div>
         </div>
+        <div>
+              {products.length > 0 && <nav aria-label="Page navigation example mb-3">
+                      <ul class="pagination justify-content-center my-3 mb">
+                        <li class="page-item">
+                          <span class="page-link" onClick={()=> selectPageHandler(Page - 1)}>⏪</span>
+                        </li>
+                        {
+                          [...Array(Math.ceil(products.length/10))].map((_, i)=>{
+                                return <li className='page-item'><a key={i} className='page-link' onClick={()=> selectPageHandler(i + 1)}>{i + 1}</a></li>
+                                // return i
+                          })
+                        }
+                        <li class="page-item">
+                          <span class="page-link" onClick={()=> selectPageHandler(Page + 1)}>⏩</span>
+                        </li>
+                      </ul>
+                  </nav>
+                }
+           </div>
       </section>
     </div>
   )

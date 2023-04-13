@@ -6,16 +6,21 @@ import "./Comp.css"
 const Cart = ({cart, handleChange, clearCart, price, deleteCartItem}) => {
 const navigate = useNavigate()
   // handlePrice()
+  let checkCart = JSON.parse(localStorage.getItem("cart"))
 
 const ship_page =()=>{
-  if(cart.length == 0){
-    alert("cart is empty, please add item to cart")
-    
-  }else{
-    navigate('/shipping_page')
-
-  }
+    let checkStore = JSON.parse(localStorage.getItem("userAddress"))
+    if(checkStore == null)(
+      navigate("/user")
+    )
+    else if(checkCart.length == 0){
+      alert("cart is empty")
+    }
+    else{
+      navigate("/shipping_page")
+    }
 }
+
   const placeCart = cart.map((item, index)=>{
     return <tbody >
     <tr key={index}>
@@ -59,8 +64,9 @@ const ship_page =()=>{
                       <th class="text-center"><a class="btn btn-sm btn-outline-danger" href="#" onClick={()=> clearCart()}>Clear Cart</a></th>
                   </tr>
                   </thead>
-                   {placeCart}
+                   {placeCart }
                   </table>
+                  {cart.length == 0 && <div className='text-center pt-5'><h3><b>Cart is Empty</b></h3></div>}
                 </div>
                 </div>
                 <div className='col-sm-3 mt-2 shadow-lg sub-total'>

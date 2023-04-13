@@ -54,12 +54,12 @@ const BarChart = ({chart}) => {
         }]
       };
       var options = {
-        maintainAspectRatio : true,
-        scales: {
-            y: {
-                beginAtZero : true
-            }
-        },
+        // maintainAspectRatio : true,
+        // scales: {
+        //     y: {
+        //         beginAtZero : true
+        //     }
+        // },
         legend :{
             labels:{
                 font:  {
@@ -73,7 +73,7 @@ const BarChart = ({chart}) => {
     };
   return (
     <div>
-        <div className='text-center p-3'><h3><b>MONTHLY INCOME</b></h3></div>
+        <div className='text-center p-1 mt-2'><h6><b>MONTHLY INCOME</b></h6></div>
         <div class="chart-container" style={{position: "relative", height: "60vh", width: "80%"}}>
             <Bar
                 // height={100}

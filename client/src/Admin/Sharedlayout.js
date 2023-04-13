@@ -8,13 +8,11 @@ const Sharedlayout = () => {
   return (
     <div>
         <AdminNav/>
-        <div className='d-flex'>
-           <div>
-           <AdminSide/>
-           </div>
-           <div className='outlet'>
-            <Outlet/>
-           </div>
+        <div className='col-lg-12 sharedlayout' style={{paddingLeft:"0px"}} >
+          <div className='row '>
+            <div className='col-sm-2 ad-side' style={{paddingLeft: "0px"}}><AdminSide/></div>
+            <div className='col-sm-10 a-layout'><Outlet/></div>
+          </div>
         </div>
     </div>
   )

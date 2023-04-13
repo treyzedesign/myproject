@@ -34,6 +34,7 @@ transporter.verify().then((data) => {
     console.log('Error right: ', error)
 })
 
+// REGISTER USER
 signupRouter.post("/signup",async (req, res) => {
 const {firstName, lastName, email,tel, address, state, country, password} = req.body
 
@@ -42,9 +43,9 @@ try {
     console.log(isUser);
     const signupHashPass = await bcrypt.hash(password, 10)
     console.log(signupHashPass);
-    if(isUser){
-        res.status(400).json({msg: "User already exist"})
-    }else{ 
+    const total = await User.countDocuments({})
+    
+    if (total < 1){
         const user_id =  Math.floor(123456 + Math.random() * 999999);
         const newUser = {
             id: user_id,
@@ -55,7 +56,8 @@ try {
             address: address,
             state : state,
             country: country,
-            password: signupHashPass
+            password: signupHashPass,
+            superAdmin: true
         }   
         if(newUser){
             const emailToken = jwt.sign({email: email}, process.env.EMAIL_SECRET)
@@ -85,7 +87,56 @@ try {
                 })
             }
         }
+    }else{
+        if(isUser){
+            res.status(400).json({
+                message: "user already exists"
+            })
+        }else{
+            const user_id =  Math.floor(123456 + Math.random() * 999999);
+            const newUser = {
+                id: user_id,
+                firstName: firstName,
+                lastName : lastName,
+                email: email,
+                tel: tel,
+                address: address,
+                state : state,
+                country: country,
+                password: signupHashPass,
+            }   
+            if(newUser){
+                const emailToken = jwt.sign({email: email}, process.env.EMAIL_SECRET)
+                const onlyToken ={
+                    token :  emailToken,
+                    id: user_id,
+                    email: email,
+                }
+                const url = "http://localhost:3000/"
+                let info = await transporter.sendMail({
+                    from : process.env.USER,
+                    to: email,
+                    subject : "hello" + " " + "(" + firstName + ")" + " " + "Please Verify your email",
+                    html: `<p>Please verify your email address to complete the signup process into your account</p>
+                            <p>Click the link<b>(expires in 6 hours)</b> : <a href=${url + "user/verify/" + email + "/" + emailToken}> press Here</a> to proceed</p>`
+                })
+                if(info){
+                    console.log("success");
+                }
+                let save = await User.create(newUser)
+                        //    await Token.create(onlyToken)
+                if(save){
+                    console.log(save);
+                    res.status(200).json({
+                        data: save,
+                        msg: "Email verification sent, Please verify your email before you login"
+                    })
+                }
+            }
+        }
     }
+        
+    
 } catch (error) {
     res.status(500).json({mgs: "Something went wrong, try again", err: error})
 }
@@ -209,7 +260,7 @@ signupRouter.post("/verifyEmail", async(req, res)=>{
                     
                     }
                     if(decode){
-                        let edit = User.updateMany({mail},
+                        let edit = await User.updateMany({mail},
                             {
                                 $set:{
                                     verified: true
@@ -239,18 +290,20 @@ signupRouter.get("/signup", async(req, res) => {
     const mail = req.params.email  
 
     try{
-        const feedback = await User.find()
-        .limit(limit)
-        .sort({id : sort})
-        
-
-        if(feedback){
-            res.status(200).json(feedback)
-        }else{
-            res.status(401).json({msg:"bad request"})
-        }
+            const feedback = await User.find()
+            .limit(limit)
+            .sort({id : sort})
+            
+    
+            if(feedback){
+                res.status(200).json(feedback)
+            }else{
+                res.status(401).json({msg:"bad request"})
+            }
+       
+       
     }catch(error){
-            res.status(500).json({msg: error.message})
+            res.status(500).json({msg: error})
     }
 
 })
@@ -302,7 +355,7 @@ signupRouter.get("/signup/:email", async(req, res)=>{
 
 // update User 
 signupRouter.patch("/signup/:id", UserAuth ,async(req, res)=>{
-    const id = req.params.id
+    // console.log(req.user.isAdmin);
     try {
         if (typeof req.body == undefined || req.params.id == null) {
             res.json({
@@ -310,29 +363,58 @@ signupRouter.patch("/signup/:id", UserAuth ,async(req, res)=>{
                 message: 'something went wrong! check your sent data',
             });
         }else{
-            const feedback = {
-                id: parseInt(req.params.id),
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
-                email: req.body.email,
+            let obj = {
+                tel : req.body.tel_phone,
                 address: req.body.address,
                 state: req.body.state,
-                country: req.body.country
-            };
-            if(feedback){
-                const newEdit = await User.updateOne(feedback)
-                if(newEdit){
-                    res.status(201).json({
-                        msg: "successful"
-                    })
-                }
+                country : req.body.country
+            }
+            let edit = await User.findOne({id: req.params.id}).updateMany(obj)
+
+            if(edit){
+                res.status(200).json({
+                    message: "updated successfully"
+                })
             }
         }
     } catch (error) {
         res.status(500).json({
-            msg: error
+            msg: error.message
         })
     }
 })
 
+// make user an Admin
+
+signupRouter.patch("/makeAdmin/:id", UserAuth,async(req,res)=>{
+    try {
+        if (typeof req.body == undefined || req.params.id == null) {
+            res.json({
+                status: 'error',
+                message: 'something went wrong! check your sent data',
+            });
+        }else{
+            if (req.user.superAdmin == true){
+                let find_Id = await User.findOne({id: req.params.id}).updateOne({
+                    $set:{
+                        isAdmin : true
+                    }
+                })
+                if (find_Id){
+                    res.status(200).json({
+                        message: "role has been update succesfully"
+                    })
+                }
+            }else{
+                res.status(403).json({
+                    message: "Unauthorized action"
+                })
+            }
+        }
+    } catch (error) {
+        res.status(500).json({
+            msg: error.message
+        })
+    }
+})
 module.exports = signupRouter

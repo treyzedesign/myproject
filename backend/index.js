@@ -72,7 +72,12 @@ const PORT = process.env.PORT || 3001
 
 const startServer = async () => {
 
-    await mongoose.connect(process.env.CLUSTER)
-    app.listen(PORT, () => console.log(`Server is listening on port ${PORT}`))
+    await mongoose.connect("mongodb+srv://treyze123:Fae3FF9lFytn8VmG@cluster0.5kk0hsk.mongodb.net/E-commerce?retryWrites=true&w=majority").then((feedback)=>{
+      console.log("okay, connected to DB")
+      app.listen(PORT, () => console.log(`Server is listening on port ${PORT}`))
+
+    }).catch(()=>{
+      console.log("error occured connecting to DB");
+    })
 }
 startServer()

@@ -16,6 +16,11 @@ const Checkout = ({cart, price, id}) => {
   const [orderPlaced, setorderPlaced] = useState(true);
  
   let checkStore = JSON.parse(localStorage.getItem("userAddress"))
+  if (checkStore == null){
+    localStorage.setItem("userAddress", JSON.stringify({
+      
+    }))
+  }
   // console.log(checkStore.country);
   // console.log(id);
   const Cookie = Cookies.get("UserLoginToken")
@@ -262,9 +267,9 @@ const Checkout = ({cart, price, id}) => {
                           <h5>{checkStore.firstname} {checkStore.lastName}</h5>
                         </div>
                         <div>{checkStore.email}</div>
-                        <div>+234 {checkStore.tel}</div>
-                        <div>{checkStore.address}</div>
-                        <div>{checkStore.state}, Nigeria.</div>
+                        <div>{checkStore.tel ? checkStore.tel : "(enter tel. no)"}</div>
+                        <div>{checkStore.address ? checkStore.address : "(enter address)"}</div>
+                        <div>{checkStore.state ? checkStore.state : "(enter state)"}</div>
                         <div className='faedit'><FaEdit onClick={()=> seteditAddress(true)}/></div>
                       </div>
                       <hr/>

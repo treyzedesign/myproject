@@ -30,7 +30,7 @@ const PieChart = ({alluser, allproduct, chart}) => {
     }
   return (
     <div className='text-center pie-chart'>
-         <div style={{width:'100%', height: '50vh', position: 'relative', marginTop: "5vh"}}>
+         <div style={{width:'90%', height: '50vh', position: 'relative', marginTop: "5vh"}}>
             <Pie data={data} options={options}/>         
         </div>
     </div>

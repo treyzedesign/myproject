@@ -1,3 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+
+*{
+    font-family: 'Roboto', sans-serif;
+}
 .shop-bag{
     color: rgb(60, 8, 109);
     font-size: 40px;
@@ -7,42 +12,65 @@
     width: 50%;
 }
 .navigate{
-    position: fixed;
+    position: sticky;
+    top: 0;
     z-index: 1111;
     background-color: #f3f3f3;
 }
 /* addmin side */
-.sidebar{
-    background-color:  rgba(25, 4, 46, 0.9);
-    width: 15%;
-    color: white;
-    height: 100vh;
-    text-align: center;
-    padding-top: 70px;
-    /* display: inline; */
-    position: fixed;
-    z-index: 11;
-    /* margin-top: 20px; */
+
+@media (min-width: 900px){
+    .sidebar{
+        background-color:  rgb(2, 5, 39);
+        width: 100%;
+        color: white;
+        height: 86vh;
+        position: sticky;
+        top: 14vh;
+        bottom: 0;
+        padding-left: 10px;
+    }
+
+}
+@media (max-width: 900px){
+    .sidebar{
+        background-color:  rgba(255, 255, 255, 0.9);
+        width: 100%;
+        color: white;
+        height: 100vh;
+        /* display: inline; */
+        display: none;
+        /* margin-top: 20px; */
+    }
+    .ad-side{
+        display: none;
+    }
+    .layout{
+        width: 100%;
+    }
 }
 .outlet{
     margin-top: 70px;
-    width: 85%;
+    width: 100%;
     position: absolute;
     bottom: 0;
     right: 0;
     top: 0;
     
 }
+.layout{
+    border: none;
+}
 .bar-item{
-    font-size: larger;
-    font-weight: 700;
+    font-size: large;
+    font-weight: 500;
     width: 100%;
+    padding-top: 10px
 
 }
 
 .bar{
-    margin-top: 20px;
-    padding: 20px
+    padding-left: 0px;
 }
 .bar:hover{
     background-color: gold;
@@ -89,6 +117,7 @@ label{
     opacity: 0.9;
   }
 .product{
+    min-height: 100vh;
 }
 .p-h1{
     background-color: none;
@@ -123,7 +152,7 @@ marquee{
 
 /* order page */
 .order_btn{
-    font-size: 25px;
+    font-size: 20px;
     cursor: pointer;
 }
 /* bar-chart */
@@ -144,4 +173,13 @@ marquee{
     background-color: white;
     border-top: 10px solid rgba(25, 4, 46);
     border-radius: 10px;
+}
+.t-row:hover{
+    translate: scale(1.1);
+    border-bottom: 0.5px solid grey;
+}
+.cat-butt:focus{
+    background-color: rgb(16, 112, 32);
+    color: white;
+    
 }

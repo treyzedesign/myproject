@@ -8,6 +8,7 @@ import './Home.css'
 const HomeNav = ({size, finderbtn}) => {
   const [isUser, setIsUser] =useState(false)
   const [user_name, setUser_name] = useState()
+  const [isAdmin, setisAdmin] = useState();
   const [search, setSearch] = useState("")
   const navigate = useNavigate()
   // console.log(search);
@@ -18,6 +19,12 @@ const HomeNav = ({size, finderbtn}) => {
       const decoder = jwt_Decode(usertoken)
       setUser_name(decoder.Name)
       setIsUser(true)
+      if(decoder.isAdmin == true){
+        setisAdmin(decoder.isAdmin)
+      }
+      else if (decoder.superAdmin == true){
+        setisAdmin(decoder.superAdmin)
+      }
     }
   },[])
   return (
@@ -57,7 +64,11 @@ const HomeNav = ({size, finderbtn}) => {
                     </div>
                     </span>
                     <span><Link to='/contact-us'  className='text-dark font-weight-bolder'>contact</Link></span>
-                    <span><Link to=''  className='text-dark font-weight-bolder'>faq</Link></span>
+                    <span>{isAdmin ? 
+                        <Link to='/Admin'  className='text-dark font-weight-bolder'>Admin</Link> :
+                        <Link to=''  className='text-dark font-weight-bolder'>Faq</Link>
+                        
+                    }</span>
 
                 </div>
             </div>

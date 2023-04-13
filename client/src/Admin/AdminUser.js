@@ -14,7 +14,9 @@ const AdminUser = () => {
     // window.location.reload()
   }
   const user_url = `http://localhost:3001/api/v1/signup/`
-  const fetchUsers = async(user_url)=>{
+  const fetchUsers = async(user_url,{
+    
+  } )=>{
      await axios.get(user_url).then((feedback)=>{
       console.log(feedback.data)
       setUsers(feedback.data)

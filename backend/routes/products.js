@@ -1,6 +1,7 @@
 const {Router} = require("express")
 // const product = require("../controllers/product")
 const Products = require("../model/Products")
+const Category = require("../model/Category")
 const Verify = require("../utils/Auth")
 // const Verify = require("../utils/Auth")
 const productRouter = Router()
@@ -75,7 +76,7 @@ productRouter.get("/products/", async (req, res)=>{
 	const sort = req.query.sort == 'desc' ? -1 : 1;
     const date = req.query.date == 'desc' ? -1 : 1
     try {
-        const feedback = await Products.find()
+        const feedback = await Products.find({})
         .limit(limit)
         .sort({id : sort, date: date})
         if(feedback){
@@ -103,13 +104,46 @@ productRouter.get("/products/total", async(req,res)=>{
         })
     }
 })
-
-// get product categories
-productRouter.get("/products/categories",  async (req, res)=>{
+// add product category
+productRouter.post("/category", async(req, res)=>{
+    const {category_name } = req.body
     try {
-        const feedback = await Products.distinct("category")
+        if(req.body == undefined){
+            res.status(400).json({
+                msg:"invalid request"
+            })
+        }else{
+            const feedback = await Category.findOne({category_name: category_name})
+            if (feedback){
+                res.status(400).json({
+                    msg:"category already exists"
+                })
+            }else{
+                const data = {
+                    id : Math.floor(1234 + Math.random() * 9999),
+                    category_name :  category_name
+                }
+                const query = await Category.create(data)
+                if (query){
+                    res.status(201).json({
+                        message: "created"
+                    })
+                }
+            }
+            
+        }
+    } catch (error) {
+        res.status(500).json({
+            msg: error.message
+        })
+    }
+})
+// get product categories
+productRouter.get("/category",  async (req, res)=>{
+    try {
+        const feedback = await Category.find({})
         if(feedback){
-            res.send(feedback)
+            res.status(200).json({msg:feedback})
         }
     } catch (error) {
         res.status(500).json({
