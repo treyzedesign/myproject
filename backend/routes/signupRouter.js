@@ -142,6 +142,34 @@ try {
 }
 })
 
+// Resend email again
+signupRouter.post("/resend_mail", async(req,res)=>{
+    try {
+        const{email, firstName} = req.body
+        const emailToken = jwt.sign({email: email}, process.env.EMAIL_SECRET)
+        const url = "http://localhost:3000/"
+                let info = await transporter.sendMail({
+                    from : process.env.USER,
+                    to: email,
+                    subject : "hello" + " " + "(" + firstName + ")" + " " + "Please Verify your email",
+                    html: `<p>Please verify your email address to complete the signup process into your account</p>
+                            <p>Click the link<b>(expires in 6 hours)</b> : <a href=${url + "user/verify/" + email + "/" + emailToken}> press Here</a> to proceed</p>`
+                })
+                if(info){
+                    res.status(200).json({
+                        msg:"email sent"
+                    });
+                }
+    } catch (error) {
+        res.status(500).json({
+            mgs: error.message
+            
+        
+        })
+    }
+})
+
+
 //forgot Password
 signupRouter.post("/signup/password", async(req,res)=>{
     const {email} = req.body
@@ -384,6 +412,28 @@ signupRouter.patch("/signup/:id", UserAuth ,async(req, res)=>{
     }
 })
 
+// Delete a user
+signupRouter.delete('/deleteUser/:id', UserAuth, async(req,res)=>{
+    try {
+        if(req.user.superAdmin == true){
+            const finder = await User.findOne({id : req.params.id}).deleteOne()
+            if(finder){
+                res.status(200).json({
+                    message: "Deleted successfully"
+                })
+            }
+        }else{
+            res.status(403).json({
+                message: "Unauthorized action"
+            })
+        }
+    } catch (error) {
+        res.status(500).json({
+            msg: error.message
+        })
+    }
+})
+
 // make user an Admin
 
 signupRouter.patch("/makeAdmin/:id", UserAuth,async(req,res)=>{
@@ -417,4 +467,81 @@ signupRouter.patch("/makeAdmin/:id", UserAuth,async(req,res)=>{
         })
     }
 })
+
+// remove user from admin
+
+signupRouter.patch("/removeAdmin/:id",UserAuth, async(req,res)=>{
+    try {
+        if (typeof req.body == undefined || req.params.id == null) {
+            res.json({
+                status: 'error',
+                message: 'something went wrong! check your sent data',
+            });
+        }else{
+            if (req.user.superAdmin == true){
+                let find_Id = await User.findOne({id: req.params.id}).updateOne({
+                    $set:{
+                        isAdmin : false
+                    }
+                })
+                if (find_Id){
+                    res.status(200).json({
+                        message: "admin has been removed succesfully"
+                    })
+                }
+            }else{
+                res.status(403).json({
+                    message: "Unauthorized action"
+                })
+            }
+        }
+    } catch (error) {
+        res.status(500).json({
+            msg: error.message
+        })
+    }
+})
+
+// get all Admins
+signupRouter.get('/getAllAdmin', UserAuth, async(req,res)=>{
+    try {
+        let myfinder = await User.find({isAdmin: true})
+        if(myfinder){
+            res.status(200).json({
+                data: myfinder
+            })
+        }
+    } catch (error) {
+        res.status(500).json({
+            msg: error.message
+        })
+    }
+})
+
+// remove All admins
+signupRouter.patch('/removeAllAdmin', UserAuth, async(req,res)=>{
+    try {
+        if(req.user.superAdmin == true){
+            const query = await User.find({isAdmin: true}).updateMany({
+                $set:{
+                    isAdmin: false
+                }
+            })
+            if(query){
+                res.status(200).json({
+                    message: "removed admins successfully"
+                })
+            }
+        }else{
+            res.status(403).json({
+                message: "Unauthorized action"
+            })
+        }
+    } catch (error) {
+        res.status(500).json({
+            msg: error.message
+        })
+    }
+})
+
 module.exports = signupRouter

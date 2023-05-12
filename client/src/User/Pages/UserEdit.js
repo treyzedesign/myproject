@@ -2,6 +2,7 @@ import axios from 'axios'
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { useState, useRef} from 'react'
+import { ToastContainer, toast } from 'react-toastify';
 import Cookies from 'js-cookie'
 
 const UserEdit = ({fname, lname, address, email, state, country, id, tel}) => {
@@ -36,19 +37,29 @@ const UserEdit = ({fname, lname, address, email, state, country, id, tel}) => {
           country : country
         }
         localStorage.setItem("userAddress", JSON.stringify(userAddressBook))
-        window.location.reload()
+        
+        // window.location.reload()
+        toast.info(feedback.data.message + ", " + "please refresh your page",{
+          position: toast.POSITION.BOTTOM_CENTER
+        })
       }).catch((fail)=>{
         console.log(fail);
+        toast.error(fail.data.message,{
+          position: toast.POSITION.BOTTOM_CENTER
+        })
       })
 
       
     }else{
-      console.log("enter your new information");
+      toast.error("fill the form",{
+        position: toast.POSITION.BOTTOM_CENTER
+      })
     }
 
     }
   return (
     <div>
+      <ToastContainer/>
         <div className='mb-5'>
             <h3 className='text-center'>Edit Profile</h3>
         </div>

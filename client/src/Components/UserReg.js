@@ -1,14 +1,15 @@
 import axios from 'axios'
 import React from 'react'
 import { useState, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { ToastContainer, toast } from 'react-toastify';
 import "./Comp.css"
 
 const UserReg = () => {
   const [err, setErr] = useState()
   const [inputerr, setInputerr] = useState(false)
   const [loader, setLoader] = useState(false)
-  
+  const navigate = useNavigate()
   const firstref = useRef(null)
   const lastref = useRef(null)
   const emailref = useRef(null)
@@ -30,15 +31,16 @@ const UserReg = () => {
             }).then((feedback)=>{
                 console.log(feedback)
                 setLoader(false)
+                navigate(`/resend_mail/${feedback.data.data.email}/${feedback.data.data.firstName}`)
             }).catch((fail)=>{
                 console.log(fail)
                 setLoader(false)
-                setErr(fail.response.data.msg)
+                toast.error(fail.response.data.msg)
                 setInputerr(false)          
             })
 
      }else{
-         setInputerr(true)
+         toast.error('input all fields')
      }
   }
   return (
@@ -48,21 +50,19 @@ const UserReg = () => {
         <div className='loader'></div>
      </div>
      }
+
+         <ToastContainer />
          <div className='user-form px-5 py-3 shadow-lg '>
               <form className="form-signin" method='post'>
                 <h1 className="h3 mb-3 font-weight-normal text-center">Welcome!, Please sign Up</h1>
-                <div className="text-center">
-                    {inputerr && <small className="p-2 text-danger">please input all fields</small>}
-                    <small className="p-2 text-danger">{err}</small>
-                </div>
                 <label for="inputfirstname" className="sr-only">firstName</label> 
-                <input type="text" id="" className="form-control" ref={firstref} placeholder="First name" required/>
+                <input type="text" id="" className="form-control my-2" ref={firstref} placeholder="First name" required/>
                 <label className="sr-only">lastName</label>
-                <input type="text"  className="form-control" ref={lastref} placeholder="Last name" required/>
+                <input type="text"  className="form-control my-2" ref={lastref} placeholder="Last name" required/>
                 <label className="sr-only">email</label>
-                <input type="email"  className="form-control" ref={emailref} placeholder="Email address" required/>
+                <input type="email"  className="form-control my-2" ref={emailref} placeholder="Email address" required/>
                 <label className="sr-only">password</label>
-                <input type="password"  className="form-control" placeholder="set password" ref={passwordref} required/>
+                <input type="password"  className="form-control my-2" placeholder="set password" ref={passwordref} required/>
                 <div className="checkbox mb-3">
                 </div>
                 <button className="btn btn-lg btn-primary btn-block" type="button" onClick={() => registerUser()}>Sign up</button><hr/>

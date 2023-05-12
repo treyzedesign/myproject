@@ -6,7 +6,6 @@ const ProtectedRoute = ({ children }) => {
   let user = Cookie.get('UserLoginToken')
   // console.log(user);
   let decoder = jwt_decode(user)
-  console.log(decoder);
   if(!user){
     return <Navigate to="/404" />;
   }else{
@@ -16,9 +15,6 @@ const ProtectedRoute = ({ children }) => {
     return <Navigate to="/404" />;
     
   }
-
-  
 };
-
 export default ProtectedRoute
 

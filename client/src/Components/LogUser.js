@@ -3,14 +3,13 @@ import axios from 'axios'
 import React from 'react'
 import { useState, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { ToastContainer, toast } from 'react-toastify';
 import Cookie from 'js-cookie'
 import "./Comp.css"
 import { FaArrowLeft } from 'react-icons/fa'
 
 const LogUser = (props) => {
     const navigate = useNavigate()
-    const [err, setErr] = useState()
-    const [inputerr, setInputerr] = useState(false)
     const [loader, setLoader] = useState(false)
     // const [data, setdata] = useState([])
 
@@ -37,12 +36,11 @@ const LogUser = (props) => {
             }).catch((fail)=>{
                 console.log(fail)
                 setLoader(false)
-                setErr(fail.response.data.message)
-                setInputerr(false)
+                toast.error(fail.response.data.message)
             })
         }else{
             setLoader(false)
-            setInputerr(true)
+            toast.error("Input all fields")
             
         }
     }
@@ -54,13 +52,11 @@ const LogUser = (props) => {
      </div>
      }
     <div ><FaArrowLeft className='Arrow ' onClick={()=> navigate('/')}/></div>
-
+    <ToastContainer/>
     <div className='user-formlog  px-5 py-3 shadow-lg'>
               <form className="form-signin">
                 <h1 className="h3 mb-3 font-weight-normal text-center">Please sign in</h1>
                 <div className="text-center">
-                    {inputerr && <small className="p-2 text-danger">please input your credentials</small>}
-                    <small className="p-2 text-danger">{err}</small>
                 </div>
                 <label className="sr-only">Email address</label>
                 <input type="email" id="inputEmail" className="form-control" ref={emailRef} placeholder="Email address" required />

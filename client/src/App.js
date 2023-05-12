@@ -37,6 +37,8 @@ import Password from "./User/Pages/Password";
 import AdminPost from "./Admin/pages/AdminPost";
 import AdminSettings from "./Admin/pages/AdminSettings";
 import NotFound from "./Components/NotFound";
+import ResendMail from "./Components/ResendMail";
+import 'react-toastify/dist/ReactToastify.css';
 
 const getItemsFromLocalStorage = () => {
 const result = localStorage.getItem("cart")
@@ -210,13 +212,14 @@ function App() {
   const token = Cookie.get('UserLoginToken')
   const accept = window.confirm("are you sure you want to delete this order")
   if(accept){
-    window.location.reload()
+    // window.location.reload()
     const del = await axios.delete(`http://localhost:3001/api/v1/order/${refId}`,{
       headers: {
        "usertoken" : token
      }
     }).then((feedback)=>{
       console.log(feedback);
+      alert("deleted successfully")
     }).catch((fail)=>{
      console.log(fail);
     })
@@ -292,7 +295,7 @@ useEffect(()=>{
       <Routes>
         {/* ADMIN */}
         <Route path="/admin" element = {<ProtectedRoute><Sharedlayout/></ProtectedRoute>}>
-           <Route index element={<Admin/>}/>
+           <Route index element={<Admin fname={fname} lname={lname}/>}/>
            <Route path="/admin/products" element={<Adminprod del_prod = {del_prod}/>}/>
            <Route path="/admin/users" element={<AdminUser del_prod={del_prod}/>}/>
            <Route path="/admin/orders" element={<AdminOrder del_order={del_order} del_all_order={del_all_order}/>}/>
@@ -316,7 +319,7 @@ useEffect(()=>{
         <Route path="/register" element={<UserReg/>}></Route>
         <Route path="/login" element={<LogUser />}></Route>
         <Route path="*" element={<NotFound/>}/>
-
+        <Route path="/resend_mail/:email/:firstName" element={<ResendMail/>}/>
         <Route path="/user/verify/:email/:token" element={<EmailVerify/>}></Route>
         <Route path="/user/password/forgotPass" element={<ForgotPass/>}></Route>
         <Route path="/change_password/:id" element={<ChangePassword/>}></Route>

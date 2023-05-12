@@ -3,7 +3,7 @@ const {Router} = require("express")
 const Products = require("../model/Products")
 const Category = require("../model/Category")
 const Verify = require("../utils/Auth")
-// const Verify = require("../utils/Auth")
+const UserAuth = require("../utils/UserAuth")
 const productRouter = Router()
 const multer = require('multer')
 const { verify } = require("jsonwebtoken")
@@ -105,7 +105,7 @@ productRouter.get("/products/total", async(req,res)=>{
     }
 })
 // add product category
-productRouter.post("/category", async(req, res)=>{
+productRouter.post("/category", UserAuth, async(req, res)=>{
     const {category_name } = req.body
     try {
         if(req.body == undefined){
@@ -113,24 +113,29 @@ productRouter.post("/category", async(req, res)=>{
                 msg:"invalid request"
             })
         }else{
-            const feedback = await Category.findOne({category_name: category_name})
-            if (feedback){
-                res.status(400).json({
-                    msg:"category already exists"
-                })
-            }else{
-                const data = {
-                    id : Math.floor(1234 + Math.random() * 9999),
-                    category_name :  category_name
-                }
-                const query = await Category.create(data)
-                if (query){
-                    res.status(201).json({
-                        message: "created"
+            if(req.user.superAdmin == true || req.user.isAdmin == true){
+                const feedback = await Category.findOne({category_name: category_name})
+                if (feedback){
+                    res.status(400).json({
+                        msg:"category already exists"
                     })
+                }else{
+                    const data = {
+                        id : Math.floor(1234 + Math.random() * 9999),
+                        category_name :  category_name
+                    }
+                    const query = await Category.create(data)
+                    if (query){
+                        res.status(201).json({
+                            message: "created"
+                        })
+                    }
                 }
+            }else{
+                res.status(403).json({
+                    message: "Unauthorized User"
+                })
             }
-            
         }
     } catch (error) {
         res.status(500).json({
@@ -153,6 +158,33 @@ productRouter.get("/category",  async (req, res)=>{
     }
 })
 
+// delete category
+
+productRouter.delete('/category/:id', UserAuth, async(req, res)=>{
+    const id = req.params.id
+    try {
+        const feedback = await Category.findOne({id: id})
+        if(feedback){
+            const del = await Category.deleteOne({id: id})
+            if(del){
+                await Products.find({category: feedback.category_name}).updateMany({
+                    $set:{
+                        category: "UnCategorized"
+                    }
+                })
+                res.status(200).json({
+                    msg: "deleted successfully"
+                })
+            }
+        }
+    } catch (error) {
+        res.status(500).json({
+            msg: error.message
+        })
+        
+    }
+})
+
 //get products in category
 productRouter.get("/products/category/:category", async (req, res)=>{
     const category = req.params.category;
@@ -160,7 +192,7 @@ productRouter.get("/products/category/:category", async (req, res)=>{
 	const sort = req.query.sort == 'desc' ? -1 : 1;
 
     try {
-        const feedback = await Products.find({category})
+        const feedback = await Products.find({category : category})
         .limit(limit)
 		.sort({ id: sort })
         if(feedback){

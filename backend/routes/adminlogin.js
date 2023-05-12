@@ -68,9 +68,9 @@ adminLogin.post("/admin-login", async(req, res)=>{
                     message: "admin logged in successfully",
                     code: "login successful"          
                 })
-                pusher.trigger("my-channel", "my-event", {
-                    message: "hello world"
-                  });
+                // pusher.trigger("my-channel", "my-event", {
+                //     message: "hello world"
+                //   });
 
             }else{
               res.status(404).json({

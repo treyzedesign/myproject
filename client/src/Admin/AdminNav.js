@@ -6,9 +6,6 @@ import Cookie from "js-cookie"
 import "./admin.css"
 
 const AdminNav = () => {
-  const logout = ()=>{
-    Cookie.remove('AccessToken')
-  }
   return (
     <>
     <div className= ' container-fluid navigate text-center'>
@@ -20,16 +17,6 @@ const AdminNav = () => {
                 </div>
             </div>
             <div className="col-sm-7">
-                <div className="links text-right  d-flex justify-content-around mt-3">
-                    <span><Link to='' className='text-dark font-weight-bolder dropdown-toggle'data-toggle="dropdown" aria-expanded="false" >account</Link>
-                    <div className="dropdown-menu">
-                      <Link  to='/admin-login' onClick={()=> logout()} className="dropdown-item bg-warning" >Log out</Link>
-                    </div>
-                    </span>
-                    <span><Link to=''  className='text-dark font-weight-bolder'>contact</Link></span>
-                    <span><Link to=''  className='text-dark font-weight-bolder'>faq</Link></span>
-
-                </div>
             </div>
         </div>
     </div>

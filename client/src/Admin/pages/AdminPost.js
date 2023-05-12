@@ -5,7 +5,10 @@ import { useState, useEffect } from 'react'
 import Cookies from 'js-cookie'
 
 const AdminPost = () => {
-  const [topping, setTopping] = useState('first')
+  const [topping, setTopping] = useState(false)
+  
+  
+  // const [bgColor, setBgColor] = useState({});
   const [title, setTitle] = useState([])
   const [desc, setDesc] = useState([])
   const [spec, setSpec] = useState([])
@@ -15,10 +18,6 @@ const AdminPost = () => {
   const [season, setSeason] = useState([])
   const [poster, setPoster] = useState([])
   const [cat, setcategory] = useState([])
-  const categoryId = (name)=>{
-    setCat(name)
-  }
-  console.log(category);//
 
   const postprod = (e)=>{
     e.preventDefault()
@@ -59,20 +58,24 @@ const AdminPost = () => {
     <div style={{marginTop:"10vh"}}>
          <div className='prod-box m-auto'>
         <form method='post' onSubmit={postprod} encType='multipart/form-data'>
-          
-          <div className='form-group'>
-            <label>title</label><br/>
-            <input type="text" onChange={(e)=>{setTitle(e.target.value)}} value={title} className='form-control shadow-lg' />
-          </div>
-          <div className='form-group'>
-            <label>description</label><br/>
-            <textarea cols="60" onChange={(e)=>{setDesc(e.target.value)}} value={desc} rows="5" className='border border-none shadow-lg'></textarea>
-          </div>
-          <div className='form-group'>
-            <label>spec</label><br/>
-            <textarea cols="60" onChange={(e)=>{setSpec(e.target.value)}} value={spec} rows="5" className='border border-none shadow-lg'></textarea>
-          </div>
-          <div className='d-flex'>
+          <div className='col-md-12'>
+            <div className='row'>
+              <div className='col-md-6'>
+                <div className='form-group'>
+                  <label>title</label><br/>
+                  <input type="text" onChange={(e)=>{setTitle(e.target.value)}} value={title} className='form-control shadow-lg' />
+                </div>
+                <div className='form-group'>
+                  <label>description</label><br/>
+                  <textarea cols="60" onChange={(e)=>{setDesc(e.target.value)}} value={desc} rows="5" className='border border-none shadow-lg form-control'></textarea>
+                </div>
+                <div className='form-group'>
+                  <label>spec</label><br/>
+                  <textarea cols="60" onChange={(e)=>{setSpec(e.target.value)}} value={spec} rows="5" className='border border-none shadow-lg form-control'></textarea>
+                </div>
+              </div>
+              <div className='col-md-6'>
+              <div className='d-flex'>
           <div className='form-group'>
             <label>brand</label><br/>
             <input type="text" onChange={(e)=>{setBrand(e.target.value)}} value={brand} className='form-control shadow-lg' />
@@ -84,13 +87,17 @@ const AdminPost = () => {
           </div>
           <div >
           <div className='form-group'>
-            <div><h5>category</h5></div>
+          <label>Category</label><br/>
+            
             {
               cat.map((item)=>{
                 return (
-                    <span className='pl-2'>
-                    <input type='button' onClick={()=> categoryId(item.category_name)}  className='btn btn-outline-success m-1 cat-butt' name={item.category_name} value={item.category_name}/>
+                    < >
+                    <span className='p-2'>
+                    <input type='radio' style={{width: "20px", height:"13px", cursor:"pointer", accentColor:"blue"}} className='radio' name={item} onChange={(e)=> setCat(e.target.value)} value={item.category_name}/>
+                    <label className='' for={item.category_name}>{item.category_name}</label>
                     </span>
+                    </>
                     
                 )
               })
@@ -109,8 +116,8 @@ const AdminPost = () => {
           <div className='form-group'>
             <label>image file</label><br/>
             <input type="file"  onChange={(e) => {
-              const file = e.target.files[0]
-              setPoster(file) 
+              // const file = e.target.files[0]
+              // setPoster(file) 
             }} className='form-control shadow-lg' />
           </div>
            {/* <div className='form-group ml-5'>
@@ -120,6 +127,11 @@ const AdminPost = () => {
           <div>
             <button type='submit'  className="btn btn-warning mb-5"> post product</button>
           </div>
+                
+              </div>
+            </div>
+          </div>
+         
         </form>
       </div>
     </div>

@@ -110,6 +110,11 @@ const MyOrder = ({id, Order}) => {
             </div>
         </div>}
         {myorders}
+        {Order.length == 0 && <>
+            <div className='text-center' style={{marginTop:"20vh",}}>
+                <h3>You have not placed any order</h3>
+            </div>
+        </>}
     </div>
   )
 }

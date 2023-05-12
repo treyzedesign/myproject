@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React from 'react'
-import { FaEnvelope, FaPaperPlane, FaEye } from 'react-icons/fa';
+import { FaEnvelope, FaPaperPlane, FaEye , FaChessPawn, FaChessKnight, FaChessQueen} from 'react-icons/fa';
 import { useState, useEffect, useRef} from 'react'
 import Cookies from 'js-cookie'
 import jwt_decode from "jwt-decode";
@@ -74,25 +74,8 @@ const AdminUser = () => {
                                        item.firstName.trim().includes(life) ||
                                        item.lastName.trim().includes(life) ||
                                        item.email.trim().includes(life)).map((item, index)=>{
-    return <div class="row">
-    <div class="col-md-12">
-    <div class="table-wrap">
-    <table class="table text-center">
-    <thead class="thead-primary">
-    <tr key={index} className="text-black bg-secondary">
-    <th>#</th>
-    <th>Id</th>
-    <th>FirstName</th>
-    <th>LastName</th>
-    <th>Email</th>
-    <th>State</th>
-    <th>Country</th>
-    <th></th>
-    <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
+    return <tbody>
+    <tr key={index}>
     <td>{index + 1}</td>
     <td>{item.id}</td>
     <td>{item.firstName}</td>
@@ -102,12 +85,9 @@ const AdminUser = () => {
     <td>{item.country}</td>
     <td><FaEye className='order_btn' onClick={()=> userInfo(item)}/></td>
     <td><FaEnvelope style={{fontSize:"25px", cursor:"pointer"}} onClick={()=> mail_user(item)}/></td>
+    <td>{item.isAdmin == true && item.superAdmin == false ? <FaChessKnight/> : <FaChessPawn/> && item.superAdmin == true && item.isAdmin == false ? <FaChessQueen/> : <FaChessPawn/> || item.isAdmin == false  && item.superAdmin == false ? <FaChessPawn/> : <FaChessKnight/>}</td>
     </tr>
     </tbody>
-    </table>
-    </div>
-    </div>
-    </div>
   })
   const userInfo = async(item)=>{
     setDetails(true)
@@ -121,16 +101,51 @@ const AdminUser = () => {
   
   }
  const makeAdmin = async()=>{
-  await axios.patch(`http://localhost:3001/api/v1/makeAdmin/${dItem.id}`, {},{
+  let accept = window.confirm("Are you sure about this?")
+  if(accept == true){
+    await axios.patch(`http://localhost:3001/api/v1/makeAdmin/${dItem.id}`, {},{
+      headers: {
+        "usertoken": cookie
+      }
+    }).then((feedback)=>{
+      // console.log(feedback);
+      window.location.reload()
+    }).catch((err)=>{
+      console.log(err);
+    })
+  }
+ }
+ const removeAdmin = async()=>{
+  let accept = window.confirm("Are you sure about this?")
+  if(accept == true){
+    await axios.patch(`http://localhost:3001/api/v1/removeAdmin/${dItem.id}`, {},{
     headers: {
       "usertoken": cookie
     }
-  }).then((feedback)=>{
-    // console.log(feedback);
-    window.location.reload()
-  }).catch((err)=>{
-    console.log(err);
-  })
+    }).then((feedback)=>{
+      // console.log(feedback);
+      window.location.reload()
+      
+    }).catch((err)=>{
+      console.log(err);
+    })
+  }
+ }
+ const delUser = async()=>{
+  let accept = window.confirm("Are you sure about this?")
+  if(accept == true){
+    await axios.delete(`http://localhost:3001/api/v1/deleteUser/${dItem.id}`,{
+      headers:{
+        "usertoken": cookie
+      }
+    }).then((feedback)=>{
+      // console.log(feedback);
+      window.location.reload()
+      
+    }).catch((err)=>{
+      console.log(err);
+    })
+  }
  }
   return (
     <div>
@@ -185,8 +200,16 @@ const AdminUser = () => {
                           <strong>state :</strong> <span>{dItem.state}</span>
                       </div>
                       <div>
-                          <strong>Role :</strong> <span>{dItem.isAdmin == true ? "Admin" : "User" || dItem.superAdmin == true ? "Super-Admin" : "User"}</span>
+                          <strong>Role :</strong> <span>{dItem.isAdmin == true && dItem.superAdmin == false ? "Admin" : "User" && dItem.superAdmin == true && dItem.isAdmin == false ? "Super-Admin" : "User" || dItem.isAdmin == false  && dItem.superAdmin == false ? "User" : "Admin"}</span>
                       </div>
+                      <div>
+                        {
+                          decoder.superAdmin == true && <>
+                          {dItem.isAdmin == false ? <button className='btn btn-outline-success' style={{position:'absolute',top:"100px", right:"35px"}} onClick={()=> makeAdmin()}>make admin</button> : <button className='btn btn-outline-success mt-5' style={{position:'absolute',top:"50px", right:"35px"}} onClick={()=> removeAdmin()}>remove admin</button>}
+                          </>
+                        }
+                      </div>
+
                   </div>
                   <h6 className="pt-3">user Stats </h6>
                   <div className='d-each-box'>
@@ -238,7 +261,7 @@ const AdminUser = () => {
                                   <td>{item.refId}</td>
                                   <td> &#8358;{item.amount}</td>
                                   <td>{item.payment}</td>
-                                  <td>{item.createdAt.slice(0,11)}</td>
+                                  <td>{item.createdAt.slice(0,10)}</td>
                                 </tr>
                               )
                             })
@@ -250,12 +273,7 @@ const AdminUser = () => {
                       
                   </div>
                  <div>
-                  {
-                    decoder.superAdmin == true && <>
-                    {dItem.isAdmin == false ? <button className='btn btn-outline-success mt-5' onClick={()=> makeAdmin()}>make admin</button> : <button className='btn btn-outline-success mt-5'>remove admin</button>}
-                    </>
-                  }
-                  
+                 {decoder.superAdmin == true && <button className='btn btn-danger mt-4' onClick={()=> delUser()}>delete user</button>}
                  </div>
               </div>
             </div>
@@ -272,7 +290,29 @@ const AdminUser = () => {
               <h5>filter</h5>
               <input placeholder='by id, firstname, lastname, email' className='form-control shadow-lg' onChange={(e)=>{setfilter(e.target.value)}}/> 
             </div>
-           {myUsers}
+            <div class="row">
+              <div class="col-md-12">
+              <div class="table-wrap">
+              <table class="table text-center table-borderless">
+              <thead class="thead-primary">
+              <tr className="text-black bg-secondary">
+              <th>#</th>
+              <th>Id</th>
+              <th>FirstName</th>
+              <th>LastName</th>
+              <th>Email</th>
+              <th>State</th>
+              <th>Country</th>
+              <th></th>
+              <th></th>
+              <th></th>
+              </tr>
+              </thead>
+              {myUsers}
+              </table>
+              </div>
+              </div>
+              </div>
         </div>
         {/* <div className='text-center'><button className='btn btn-warning'>see all</button></div> */}
       </section>

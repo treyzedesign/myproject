@@ -123,7 +123,7 @@ label{
     background-color: none;
 }
 .prod-box{
-    width: 40%;
+    width: 100%;
     margin-top: 30vh;
     /* background-color: white; */
 }
@@ -179,7 +179,10 @@ marquee{
     border-bottom: 0.5px solid grey;
 }
 .cat-butt:focus{
-    background-color: rgb(16, 112, 32);
+    background-color: rgba(255, 255, 255, 0);
     color: white;
     
+}
+.radio{
+    accent-color: green;
 }

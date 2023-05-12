@@ -67,6 +67,14 @@
     padding: 15px;
     border-radius: 7px;
 }
+.email-card-resend{
+    width: 30%;
+    margin: 13em auto;
+    text-align: center;
+    background-color: grey;
+    padding: 15px;
+    border-radius: 7px;
+}
 .fail{
     font-size: 80px;
     transform: rotate(45deg);

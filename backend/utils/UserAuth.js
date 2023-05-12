@@ -6,7 +6,7 @@ dotenv.config()
 
 const UserAuth = async(req,res,next) => {
     const authHeader = req.headers.usertoken
-    console.log(authHeader);
+    // console.log(authHeader);
    
         // console.log(admintoken);
         jwt.verify(authHeader, process.env.TOKEN_SECRET, (err, decode)=>{

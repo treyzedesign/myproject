@@ -18,8 +18,9 @@ const orderschema = new mongoose.Schema({
    tel : {type: String, require: true},
    address : {type: String, require: true},
    state : {type: String, require: true},
-   status : {type: String, default: "pending"},
-   payment : {type: String , default: "on delivery"}
+   status : {type: String, default: "processing"},
+   payment : {type: String , default: "on delivery"},
+   deliveredAt : {type: Date}
 },
  {timestamps: true}
 )

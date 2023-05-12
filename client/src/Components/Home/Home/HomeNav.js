@@ -5,15 +5,25 @@ import jwt_Decode from 'jwt-decode'
 import { FaShoppingBag, FaCartPlus, FaUser, FaSearchengin, FaSearch } from 'react-icons/fa'
 import { useState, useEffect } from 'react'
 import './Home.css'
+import axios from 'axios'
 const HomeNav = ({size, finderbtn}) => {
   const [isUser, setIsUser] =useState(false)
   const [user_name, setUser_name] = useState()
   const [isAdmin, setisAdmin] = useState();
   const [search, setSearch] = useState("")
+  const [category, setcategory] = useState([])
   const navigate = useNavigate()
   // console.log(search);
-  
+  const fetchCat = async()=>{
+    await axios.get(`http://localhost:3001/api/v1/category`).then((feedback)=>{
+      console.log(feedback.data.msg);
+      setcategory(feedback.data.msg)
+    }).catch((err)=>{
+      console.log(err);
+    })
+  }
   useEffect(()=>{
+    fetchCat()
     const usertoken = Cookies.get("UserLoginToken")
     if (usertoken) {
       const decoder = jwt_Decode(usertoken)
@@ -39,10 +49,10 @@ const HomeNav = ({size, finderbtn}) => {
             <div className="col-sm-9">
                 <div className="links text-right  d-flex justify-content-around mt-3">
                     <span><Link to='/about' className='text-dark font-weight-bolder'>about</Link></span>
-                    <span><div className='text-dark d-flex font-weight-bolder dropdown-toggle 'data-toggle="dropdown" aria-expanded="true" >{isUser ?
-                        <div><FaUser className='mr-1'/>{user_name}</div>
+                    <span><div className='text-dark d-flex font-weight-bolder dropdown'data-toggle="dropdown" aria-expanded="true" >{isUser ?
+                        <><FaUser className='mr-1'/>{user_name}</>
                        :
-                       <h6>Account</h6>
+                       <>Account</>
                     }</div>
                     <div className="dropdown-menu">
                       <div to='' className="dropdown-item bg-warning" >{isUser ? 
@@ -80,11 +90,9 @@ const HomeNav = ({size, finderbtn}) => {
             <div className='col-sm-2'>
                  <div className='pt-2 text-center'><Link to='' className='text-light font-weight-bolder dropdown-toggle'data-toggle="dropdown" aria-expanded="false" >category</Link>
                     <div className="dropdown-menu">
-                      <Link  to='' className="dropdown-item" >male fashion</Link>
-                      <Link  to=''  className="dropdown-item" >female fashion</Link>
-                      <Link  to=''  className="dropdown-item">computing</Link>
-                      <Link  to=''  className="dropdown-item">electronics</Link>
-                      <Link  to=''  className="dropdown-item">gaming</Link>
+                    {category.map((item)=>{
+                        return <Link to={"/product/" + item.category_name}  className='dropdown-item'>{item.category_name}</Link>
+                      })}
                     </div>
                     </div>
             </div>

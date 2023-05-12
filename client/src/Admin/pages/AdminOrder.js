@@ -27,7 +27,7 @@ export const AdminOrder = ({del_order, del_all_order}) => {
   }
   const status_update = async ()=>{
     await axios.patch('http://localhost:3001/api/v1/order/status').then((feedback)=>{
-      console.log(feedback);
+      // console.log(feedback);
     }).catch((err)=>{
       console.log(err);
     })
@@ -39,8 +39,7 @@ export const AdminOrder = ({del_order, del_all_order}) => {
 
   useEffect(() => {
     fetchOrders(order_url)
-    status_update()
-  }, [filter]);
+  }, [filter, orders]);
   const life = String(filter)
   const myOrders = orders.map((item, index)=>{
     return <tbody>
@@ -87,6 +86,9 @@ export const AdminOrder = ({del_order, del_all_order}) => {
                         </div>
                         <div>
                             <strong>Payment method :</strong> <span> {dItem.payment}</span>
+                        </div>
+                        <div>
+                            <strong>Status :</strong> <span> {dItem.status}</span>
                         </div>
                     </div>
                     <hr/>
@@ -149,7 +151,7 @@ export const AdminOrder = ({del_order, del_all_order}) => {
           <th>OrderId</th>
           <th>Email</th>
           <th>Amount</th>
-          <th>Product No</th>
+          <th>Items</th>
           <th>Payment</th>
           <th>Date</th>
           <th></th>

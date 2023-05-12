@@ -73,10 +73,9 @@ const BarChart = ({chart}) => {
     };
   return (
     <div>
-        <div className='text-center p-1 mt-2'><h6><b>MONTHLY INCOME</b></h6></div>
-        <div class="chart-container" style={{position: "relative", height: "60vh", width: "80%"}}>
+        <div className='text-center p-1 mt-2' ><h6><b>MONTHLY INCOME</b></h6></div>
+        <div class="chart-container" style={{position: "relative", height: "45vh", width: "80%"}}>
             <Bar
-                // height={100}
                 data = {data}
                 options={options}
             />

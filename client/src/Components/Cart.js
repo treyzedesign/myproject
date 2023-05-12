@@ -2,6 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { FaTrash, FaPlus, FaMinus } from 'react-icons/fa';
+import { ToastContainer, toast } from 'react-toastify';
 import "./Comp.css"
 const Cart = ({cart, handleChange, clearCart, price, deleteCartItem}) => {
 const navigate = useNavigate()
@@ -14,7 +15,10 @@ const ship_page =()=>{
       navigate("/user")
     )
     else if(checkCart.length == 0){
-      alert("cart is empty")
+      toast.info("cart is empty",{
+        theme: "colored",
+        position: toast.POSITION.BOTTOM_LEFT
+      })
     }
     else{
       navigate("/shipping_page")
@@ -50,6 +54,7 @@ const ship_page =()=>{
   
   return (
     <div className='cart'>
+      <ToastContainer/>
         <div class="container-fluid padding-bottom-3x mb-1">
           <div className='col-sm-12'>
             <div className='row'>

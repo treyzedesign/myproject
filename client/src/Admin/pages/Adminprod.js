@@ -15,8 +15,8 @@ const Adminprod = ({del_prod}) => {
   
   const product_url = `http://localhost:3001/api/v1/products`
   const fetchProducts = async (product_url)=>{
-    const prod = await axios.get(product_url).then((feedback)=>{
-      console.log(feedback.data);
+      await axios.get(product_url).then((feedback)=>{
+      // console.log(feedback.data);
      setProd(feedback.data)
     }).catch((issue)=>{
       console.log(issue);
@@ -24,7 +24,7 @@ const Adminprod = ({del_prod}) => {
   }
   useEffect(()=>{
     fetchProducts(product_url);
-  }, [del_prod])
+  }, [prod])
   
   const productInfo = (item)=>{
     setDetails(true)
